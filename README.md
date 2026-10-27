@@ -2,6 +2,8 @@
 
 DanfeSharp é uma biblioteca em C# que gera em PDF os documentos auxiliares dos documentos fiscais eletrônicos brasileiros.
 
+Este projeto é um fork do [DanfeSharp](https://github.com/SilverCard/DanfeSharp), criado por Ricardo Brito, e é distribuído como o pacote `DanfeSharp.Next`.
+
 A biblioteca [PDFsharp](https://www.pdfsharp.net/) é utilizada para a escrita dos arquivos em PDF.
 
 ## Documentos suportados
@@ -114,3 +116,7 @@ using (var dacte = new Dacte(modelo))
     dacte.Salvar("dacte.pdf");
 }
 ```
+
+## Licença
+
+MIT. Veja [LICENSE.txt](LICENSE.txt), que mantém o aviso de copyright do projeto original.
