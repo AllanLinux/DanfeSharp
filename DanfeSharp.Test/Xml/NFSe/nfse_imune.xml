@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NFS-e fictícia com a estrutura de uma NFS-e real: ISSQN sem incidência, IBS/CBS imunes e grupos de alíquotas vazios. -->
+<NFSe versao="1.01" xmlns="http://www.sped.fazenda.gov.br/nfse">
+	<infNFSe Id="NFS33045572222222222000191000000080595526099876543212">
+		<xLocEmi>Rio de Janeiro</xLocEmi>
+		<xLocPrestacao>Rio de Janeiro</xLocPrestacao>
+		<nNFSe>805955</nNFSe>
+		<xTribNac>Inserção de textos, desenhos e outros materiais de propaganda e publicidade, em qualquer meio (exceto em livros, jornais, periódicos e nas modalidades de serviços de radiodifusão sonora e de sons e imagens de recepção livre e gratuita).</xTribNac>
+		<xNBS>Venda de espaço para propaganda em mídia impressa, exceto sob comissão</xNBS>
+		<verAplic>SefinNacional_1.6.0</verAplic>
+		<ambGer>2</ambGer>
+		<tpEmis>1</tpEmis>
+		<procEmi>1</procEmi>
+		<cStat>100</cStat>
+		<dhProc>2026-09-30T01:09:24-03:00</dhProc>
+		<nDFSe>154517631</nDFSe>
+		<emit>
+			<CNPJ>22222222000191</CNPJ>
+			<xNome>EDITORA EXEMPLO S/A</xNome>
+			<enderNac>
+				<xLgr>RUA DO EXEMPLO</xLgr>
+				<nro>00025</nro>
+				<xBairro>CENTRO</xBairro>
+				<cMun>3304557</cMun>
+				<UF>RJ</UF>
+				<CEP>20230240</CEP>
+			</enderNac>
+			<fone>2130001000</fone>
+			<email>FISCAL@EDITORAEXEMPLO.COM.BR</email>
+		</emit>
+		<valores>
+			<vLiq>2288.00</vLiq>
+		</valores>
+		<IBSCBS>
+			<cLocalidadeIncid>3550308</cLocalidadeIncid>
+			<xLocalidadeIncid>São Paulo</xLocalidadeIncid>
+			<valores>
+				<vBC>2288.00</vBC>
+				<vCalcReeRepRes>0.00</vCalcReeRepRes>
+				<uf/>
+				<mun/>
+				<fed/>
+			</valores>
+			<totCIBS>
+				<vTotNF>2288.00</vTotNF>
+				<gIBS>
+					<vIBSTot>0.00</vIBSTot>
+					<gIBSUFTot>
+						<vIBSUF>0.00</vIBSUF>
+					</gIBSUFTot>
+					<gIBSMunTot>
+						<vIBSMun>0.00</vIBSMun>
+					</gIBSMunTot>
+				</gIBS>
+				<gCBS>
+					<vCBS>0.00</vCBS>
+				</gCBS>
+			</totCIBS>
+		</IBSCBS>
+		<DPS versao="1.01" xmlns="http://www.sped.fazenda.gov.br/nfse">
+			<infDPS Id="DPS330455722222222200019100001000000001239490">
+				<tpAmb>1</tpAmb>
+				<dhEmi>2026-09-30T01:00:00-03:00</dhEmi>
+				<verAplic>DanfeSharp</verAplic>
+				<serie>1</serie>
+				<nDPS>1239490</nDPS>
+				<dCompet>2026-09-30</dCompet>
+				<tpEmit>1</tpEmit>
+				<cLocEmi>3304557</cLocEmi>
+				<prest>
+					<CNPJ>22222222000191</CNPJ>
+					<fone>2140004000</fone>
+					<regTrib>
+						<opSimpNac>1</opSimpNac>
+						<regEspTrib>0</regEspTrib>
+					</regTrib>
+				</prest>
+				<toma>
+					<CNPJ>33333333000191</CNPJ>
+					<IM>12345678</IM>
+					<xNome>CLIENTE PUBLICIDADE EXEMPLO S.A.</xNome>
+					<end>
+						<endNac>
+							<cMun>3550308</cMun>
+							<CEP>04571936</CEP>
+						</endNac>
+						<xLgr>AV DO CLIENTE</xLgr>
+						<nro>1376</nro>
+						<xBairro>CIDADE EXEMPLO</xBairro>
+					</end>
+				</toma>
+				<serv>
+					<locPrest>
+						<cLocPrestacao>3304557</cLocPrestacao>
+					</locPrest>
+					<cServ>
+						<cTribNac>172501</cTribNac>
+						<xDescServ>INSERCAO PUBLICIDADE A/C AGENCIA EXEMPLO LTDA. Imunidade Constitucional Art.150, inciso VI, Alinea D CF/88. Imunidade do IBS e CBS nos termos do Inciso IV, Art. 9 da LC 214/25.</xDescServ>
+						<cNBS>114063100</cNBS>
+					</cServ>
+				</serv>
+				<valores>
+					<vServPrest>
+						<vServ>2288.00</vServ>
+					</vServPrest>
+					<trib>
+						<tribMun>
+							<tribISSQN>4</tribISSQN>
+							<tpRetISSQN>1</tpRetISSQN>
+						</tribMun>
+						<totTrib>
+							<vTotTrib>
+								<vTotTribFed>0.00</vTotTribFed>
+								<vTotTribEst>0.00</vTotTribEst>
+								<vTotTribMun>0.00</vTotTribMun>
+							</vTotTrib>
+						</totTrib>
+					</trib>
+				</valores>
+				<IBSCBS>
+					<finNFSe>0</finNFSe>
+					<indFinal>0</indFinal>
+					<cIndOp>100301</cIndOp>
+					<indDest>0</indDest>
+					<valores>
+						<trib>
+							<gIBSCBS>
+								<CST>410</CST>
+								<cClassTrib>410008</cClassTrib>
+							</gIBSCBS>
+						</trib>
+					</valores>
+				</IBSCBS>
+			</infDPS>
+		</DPS>
+	</infNFSe>
+</NFSe>

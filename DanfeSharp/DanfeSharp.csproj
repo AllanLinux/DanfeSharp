@@ -8,14 +8,14 @@
     <NeutralLanguage>pt-BR</NeutralLanguage>
 
     <PackageId>DanfeSharp.Next</PackageId>
-    <Version>3.1.1</Version>
+    <Version>3.2.0</Version>
     <Product>DanfeSharp</Product>
-    <Description>Gerador em PDF do DANFE (NF-e), DANFE NFC-e, documentos de eventos (carta de correção, cancelamento) e DACTE (CT-e), com suporte ao IBS, CBS e IS da Reforma Tributária (NT 2025.002 e NT 2026.010).</Description>
+    <Description>Gerador em PDF do DANFE (NF-e), DANFE NFC-e, documentos de eventos (carta de correção, cancelamento), DACTE (CT-e) e DANFSe (NFS-e Nacional), com suporte ao IBS, CBS e IS da Reforma Tributária (NT 2025.002 e NT 2026.010).</Description>
     <Copyright>Copyright © 2017 Ricardo Brito, © 2026 Allan Ferreira</Copyright>
     <Authors>Ricardo Brito; Allan Ferreira</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/AllanLinux/DanfeSharp.Next</RepositoryUrl>
-    <PackageTags>nfe;danfe;nfce;cte;dacte;cce;pdf;ibs;cbs;reforma-tributaria</PackageTags>
+    <PackageTags>nfe;danfe;nfce;cte;dacte;nfse;danfse;cce;pdf;ibs;cbs;reforma-tributaria</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
@@ -28,6 +28,13 @@
     <InternalsVisibleTo Include="DanfeSharp.Test" />
     <!-- Arquivo antigo, sem uso, que nunca fez parte da compilação. -->
     <Compile Remove="Modelo\FaturaViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Municípios do IBGE (código;nome), para exibir o nome do município na DANFSe. -->
+    <EmbeddedResource Include="NFSe\municipios.txt.gz" LogicalName="DanfeSharp.NFSe.municipios.txt.gz" />
+    <!-- Logotipo da NFS-e do cabeçalho da DANFSe oficial. -->
+    <EmbeddedResource Include="NFSe\logo_nfse.png" LogicalName="DanfeSharp.NFSe.logo_nfse.png" />
   </ItemGroup>
 
   <!-- .NET Framework 4.5.2: PDFsharp 1.50 (GDI+), que usa as fontes instaladas no Windows. -->
