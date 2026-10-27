@@ -105,6 +105,56 @@
         /// </summary>
         public double? ValorAproximadoTributos { get; set; }
 
+        #region Quadro "Total do ICMS/IPI" (NT 2026.010)
+
+        /// <summary>
+        /// <para>Valor total do FCP</para>
+        /// <para>Tag vFCP - W04h</para>
+        /// </summary>
+        public double? ValorFcp { get; set; }
+
+        /// <summary>
+        /// <para>Valor total do FCP retido por substituição tributária</para>
+        /// <para>Tag vFCPST - W06a</para>
+        /// </summary>
+        public double? ValorFcpSt { get; set; }
+
+        /// <summary>
+        /// <para>Quantidade tributada do ICMS monofásico próprio</para>
+        /// <para>Tag qBCMono - W06b.1</para>
+        /// </summary>
+        public double? QuantidadeBaseIcmsMonofasico { get; set; }
+
+        /// <summary>
+        /// <para>Valor total do ICMS monofásico próprio</para>
+        /// <para>Tag vICMSMono - W06c</para>
+        /// </summary>
+        public double? ValorIcmsMonofasico { get; set; }
+
+        /// <summary>
+        /// <para>Quantidade tributada do ICMS monofásico sujeito a retenção</para>
+        /// <para>Tag qBCMonoReten - W06c.1</para>
+        /// </summary>
+        public double? QuantidadeBaseIcmsMonofasicoRetencao { get; set; }
+
+        /// <summary>
+        /// <para>Valor total do ICMS monofásico sujeito a retenção</para>
+        /// <para>Tag vICMSMonoReten - W06d</para>
+        /// </summary>
+        public double? ValorIcmsMonofasicoRetencao { get; set; }
+
+        /// <summary>
+        /// Verdadeiro quando algum valor de FCP ou de ICMS interestadual (DIFAL) é maior que zero.
+        /// </summary>
+        public bool ExibirFcpDifal => MaiorQueZero(ValorFcp, ValorFcpSt, vICMSUFDest, vFCPUFDest);
+
+        /// <summary>
+        /// Verdadeiro quando algum valor do ICMS monofásico é maior que zero.
+        /// </summary>
+        public bool ExibirIcmsMonofasico => MaiorQueZero(QuantidadeBaseIcmsMonofasico, ValorIcmsMonofasico, QuantidadeBaseIcmsMonofasicoRetencao, ValorIcmsMonofasicoRetencao);
+
+        #endregion
+
         #region Reforma Tributária - IBS, CBS e IS (NT 2025.002-RTC e NT 2026.010)
 
         /// <summary>
@@ -182,6 +232,14 @@
         /// Verdadeiro quando há totais de monofasia do IBS e da CBS (grupo gMono - W57).
         /// </summary>
         public bool PossuiMonofasiaIbsCbs => ValorIbsMonofasico.HasValue || ValorCbsMonofasica.HasValue || ValorIbsMonofasicoRetencao.HasValue || ValorCbsMonofasicaRetencao.HasValue;
+
+        /// <summary>
+        /// Verdadeiro quando algum valor da monofasia do IBS e da CBS é maior que zero. Grupos gMono zerados,
+        /// enviados por padrão por muitos emissores, não se aplicam à operação e não são exibidos (NT 2026.010 item 4.4).
+        /// </summary>
+        public bool ExibirMonofasiaIbsCbs => MaiorQueZero(ValorIbsMonofasico, ValorCbsMonofasica, ValorIbsMonofasicoRetencao, ValorCbsMonofasicaRetencao);
+
+        private static bool MaiorQueZero(params double?[] valores) => System.Array.Exists(valores, v => v.HasValue && v.Value > 0);
 
         #endregion
     }

@@ -40,10 +40,19 @@ namespace DanfeSharp
             if (ViewModel.Duplicatas.Count > 0)
                 AdicionarBloco<BlocoDuplicataFatura>();
 
-            AdicionarBloco<BlocoCalculoImposto>(ViewModel.Orientacao == Orientacao.Paisagem ? EstiloPadrao : CriarEstilo(4.75F));
+            var estiloTotais = ViewModel.Orientacao == Orientacao.Paisagem ? EstiloPadrao : CriarEstilo(4.75F);
 
             if (ViewModel.UsarLeiauteReformaTributaria)
-                AdicionarBloco<BlocoTotalIbsCbsIs>(ViewModel.Orientacao == Orientacao.Paisagem ? EstiloPadrao : CriarEstilo(4.75F));
+            {
+                // NT 2026.010: o "Cálculo do Imposto" é dividido nos quadros de totais da Reforma Tributária.
+                AdicionarBloco<BlocoTotalProdutosNota>(estiloTotais);
+                AdicionarBloco<BlocoTotalIcmsIpi>(estiloTotais);
+                AdicionarBloco<BlocoTotalIbsCbsIs>(estiloTotais);
+            }
+            else
+            {
+                AdicionarBloco<BlocoCalculoImposto>(estiloTotais);
+            }
 
             AdicionarBloco<BlocoTransportador>();
             AdicionarBloco<BlocoDadosAdicionais>(CriarEstilo(tFonteCampoConteudo: 8));

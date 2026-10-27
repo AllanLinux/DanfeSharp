@@ -109,6 +109,44 @@ namespace DanfeSharp.Test
         }
 
         [TestMethod]
+        public void v4_ReformaTributaria_IcmsCompleto() => TestXml("v4.00/v4_ReformaTributaria_IcmsCompleto.xml");
+
+        [TestMethod]
+        public void v4_ReformaTributaria_IcmsCompleto_Totais()
+        {
+            var model = DanfeViewModelCreator.CriarDeArquivoXml(Path.Combine(InputXmlDirectoryPrefix, "v4.00/v4_ReformaTributaria_IcmsCompleto.xml"));
+            var m = model.CalculoImposto;
+
+            Assert.AreEqual(34.00, m.ValorFcp);
+            Assert.AreEqual(6.00, m.ValorFcpSt);
+            Assert.AreEqual(150.00, m.QuantidadeBaseIcmsMonofasico);
+            Assert.AreEqual(187.50, m.ValorIcmsMonofasico);
+            Assert.AreEqual(80.00, m.QuantidadeBaseIcmsMonofasicoRetencao);
+            Assert.AreEqual(100.00, m.ValorIcmsMonofasicoRetencao);
+            Assert.IsTrue(m.ExibirFcpDifal);
+            Assert.IsTrue(m.ExibirIcmsMonofasico);
+
+            // gMono informado, mas zerado: não se aplica à operação e não é exibido.
+            Assert.IsTrue(m.PossuiMonofasiaIbsCbs);
+            Assert.IsFalse(m.ExibirMonofasiaIbsCbs);
+
+            // PIS, COFINS e II não têm campo nos quadros da NT 2026.010 e vão para Dados Adicionais.
+            var texto = model.TextoAdicional();
+            StringAssert.Contains(texto, "Valor do PIS");
+            StringAssert.Contains(texto, "Valor da COFINS");
+            StringAssert.Contains(texto, "Valor do II");
+        }
+
+        [TestMethod]
+        public void v4_ReformaTributaria_SemFcpEMonofasico_OcultaLinhasFacultativas()
+        {
+            var model = DanfeViewModelCreator.CriarDeArquivoXml(Path.Combine(InputXmlDirectoryPrefix, "v4.00/v4_ReformaTributaria.xml"));
+
+            Assert.IsFalse(model.CalculoImposto.ExibirFcpDifal);
+            Assert.IsFalse(model.CalculoImposto.ExibirIcmsMonofasico);
+        }
+
+        [TestMethod]
         public void v4_SemReformaTributaria_MantemLeiauteAnterior()
         {
             var model = DanfeViewModelCreator.CriarDeArquivoXml(Path.Combine(InputXmlDirectoryPrefix, "v4.00/v4_ComLocalEntrega.xml"));

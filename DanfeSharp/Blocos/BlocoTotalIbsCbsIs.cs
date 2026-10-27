@@ -18,8 +18,8 @@ namespace DanfeSharp.Blocos
             .ComCampoNumerico("Valor do Imposto Seletivo", m.ValorImpostoSeletivo)
             .ComLargurasIguais();
 
-            // Campos facultativos, exibidos somente quando informado o grupo de monofasia (gMono - W57).
-            if (m.PossuiMonofasiaIbsCbs)
+            // Campos facultativos, exibidos somente quando o grupo de monofasia (gMono - W57) possuir valores.
+            if (m.ExibirMonofasiaIbsCbs)
             {
                 AdicionarLinhaCampos()
                 .ComCampoNumerico("Valor do IBS Monofásico", m.ValorIbsMonofasico)

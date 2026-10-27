@@ -180,7 +180,13 @@ namespace DanfeSharp.Modelo
                 ValorTotalNota = i.vNF,
                 vFCPUFDest = i.vFCPUFDest,
                 vICMSUFDest = i.vICMSUFDest,
-                vICMSUFRemet = i.vICMSUFRemet
+                vICMSUFRemet = i.vICMSUFRemet,
+                ValorFcp = i.vFCP,
+                ValorFcpSt = i.vFCPST,
+                QuantidadeBaseIcmsMonofasico = i.qBCMono,
+                ValorIcmsMonofasico = i.vICMSMono,
+                QuantidadeBaseIcmsMonofasicoRetencao = i.qBCMonoReten,
+                ValorIcmsMonofasicoRetencao = i.vICMSMonoReten
             };
         }
 

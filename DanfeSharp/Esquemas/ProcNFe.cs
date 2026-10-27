@@ -528,6 +528,45 @@ namespace DanfeSharp.Esquemas.NFe
 
 
         public double? vTotTrib { get; set; }
+
+        #region Campos exibidos no quadro "Total do ICMS/IPI" da NT 2026.010
+
+        /// <summary>
+        /// Valor total do FCP - W04h
+        /// </summary>
+        public double? vFCP { get; set; }
+
+        /// <summary>
+        /// Valor total do FCP retido por substituição tributária - W06a
+        /// </summary>
+        public double? vFCPST { get; set; }
+
+        /// <summary>
+        /// Valor total do FCP retido anteriormente por substituição tributária
+        /// </summary>
+        public double? vFCPSTRet { get; set; }
+
+        /// <summary>
+        /// Quantidade tributada do ICMS monofásico próprio - W06b.1
+        /// </summary>
+        public double? qBCMono { get; set; }
+
+        /// <summary>
+        /// Valor total do ICMS monofásico próprio - W06c
+        /// </summary>
+        public double? vICMSMono { get; set; }
+
+        /// <summary>
+        /// Quantidade tributada do ICMS monofásico sujeito a retenção - W06c.1
+        /// </summary>
+        public double? qBCMonoReten { get; set; }
+
+        /// <summary>
+        /// Valor total do ICMS monofásico sujeito a retenção - W06d
+        /// </summary>
+        public double? vICMSMonoReten { get; set; }
+
+        #endregion
     }
 
     /// <summary>

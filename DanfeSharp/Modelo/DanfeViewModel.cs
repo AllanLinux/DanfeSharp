@@ -359,6 +359,28 @@ namespace DanfeSharp.Modelo
             }
 
 
+            #region Leiaute da Reforma Tributária (NT 2026.010)
+
+            // Valores que não têm campo nos quadros de totais da NT 2026.010.
+            if (UsarLeiauteReformaTributaria)
+            {
+                var c = CalculoImposto;
+                var valores = new StringBuilder();
+
+                if (ExibirPisConfins && c.ValorPis > 0) valores.AppendChaveValor("Valor do PIS", ((double?)c.ValorPis).FormatarMoeda());
+                if (ExibirPisConfins && c.ValorCofins > 0) valores.AppendChaveValor("Valor da COFINS", ((double?)c.ValorCofins).FormatarMoeda());
+                if (c.ValorII > 0) valores.AppendChaveValor("Valor do II", ((double?)c.ValorII).FormatarMoeda());
+                if (ExibirIcmsInterestadual && c.vICMSUFRemet > 0) valores.AppendChaveValor("Valor do ICMS UF remetente", c.vICMSUFRemet.FormatarMoeda());
+
+                if (valores.Length > 0)
+                {
+                    if (sb.Length > 0) sb.Append("\r\n");
+                    sb.Append(valores);
+                }
+            }
+
+            #endregion
+
             #region NT 2013.003 Lei da Transparência
 
             if (CalculoImposto.ValorAproximadoTributos.HasValue && (String.IsNullOrEmpty(InformacoesComplementares) ||
