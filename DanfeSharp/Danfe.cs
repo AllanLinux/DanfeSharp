@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using DanfeSharp.Blocos;
-using DanfeSharp.Graphics;
 using DanfeSharp.Modelo;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
 
 namespace DanfeSharp
 {
-    public class Danfe : IDisposable
+    public class Danfe : DocumentoAuxiliar
     {
         public DanfeViewModel ViewModel { get; private set; }
-        internal PdfDocument PdfDocument { get; private set; }
 
         internal BlocoCanhoto Canhoto { get; private set; }
         internal BlocoIdentificacaoEmitente IdentificacaoEmitente { get; private set; }
@@ -22,28 +17,13 @@ namespace DanfeSharp
 
         internal List<DanfePagina> Paginas { get; private set; }
 
-        private FamiliaFonte _FonteRegular;
-        private FamiliaFonte _FonteNegrito;
-        private FamiliaFonte _FonteItalico;
-
         private Boolean _FoiGerado;
-
-        private XImage _LogoObject = null;
-        private MemoryStream _LogoStream = null;
 
         public Danfe(DanfeViewModel viewModel)
         {
             ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
 
             _Blocos = new List<BlocoBase>();
-            PdfDocument = new PdfDocument();
-            PdfDocument.Options.CompressContentStreams = true;
-
-            // De acordo com o item 7.7, a fonte deve ser Times New Roman ou Courier New.
-            _FonteRegular = FamiliaFonte.TimesRegular();
-            _FonteNegrito = FamiliaFonte.TimesNegrito();
-            _FonteItalico = FamiliaFonte.TimesItalico();
-
             EstiloPadrao = CriarEstilo();
 
             Paginas = new List<DanfePagina>();
@@ -71,89 +51,16 @@ namespace DanfeSharp
             if(ViewModel.CalculoIssqn.Mostrar)
                 AdicionarBloco<BlocoCalculoIssqn>();
 
-            AdicionarMetadata();
+            DefinirMetadados("DANFE", "DANFE (Documento auxiliar da NFe)", ViewModel.ChaveAcesso);
 
             _FoiGerado = false;
         }
-        
-        public void AdicionarLogoImagem(System.IO.Stream stream)
-        {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
 
-            try
-            {
-                DefinirLogo(stream, s => XImage.FromStream(s));
-            }
-            catch (Exception e) when (!(e is ArgumentException))
-            {
-                throw new InvalidOperationException("O logotipo não pode ser carregado, certifique-se que a imagem esteja no formato JPEG, PNG, GIF, BMP ou TIFF.", e);
-            }
-        }
-
-        public void AdicionarLogoPdf(System.IO.Stream stream)
-        {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-
-            DefinirLogo(stream, s => XPdfForm.FromStream(s));
-        }
-
-        /// <summary>
-        /// Copia o logotipo para a memória, pois o PDFsharp lê o conteúdo novamente ao salvar o DANFE.
-        /// </summary>
-        private void DefinirLogo(System.IO.Stream stream, Func<System.IO.Stream, XImage> carregar)
-        {
-            var ms = new MemoryStream();
-            stream.CopyTo(ms);
-            ms.Position = 0;
-
-            var logo = carregar(ms);
-
-            _LogoObject?.Dispose();
-            _LogoStream?.Dispose();
-            _LogoObject = logo;
-            _LogoStream = ms;
-        }
-
-        public void AdicionarLogoImagem(String path)
-        {
-            if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException(nameof(path));
-
-            using(var fs = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-            {
-                AdicionarLogoImagem(fs);
-            }
-        }
-
-        public void AdicionarLogoPdf(String path)
-        {
-            if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException(nameof(path));
-
-            using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-            {
-                AdicionarLogoPdf(fs);
-            }
-        }
-
-        private void AdicionarMetadata()
-        {
-            var info = PdfDocument.Info;
-            info.Elements.SetString("/ChaveAcesso", ViewModel.ChaveAcesso);
-            info.Elements.SetString("/TipoDocumento", "DANFE");
-            info.CreationDate = DateTime.Now;
-            info.Creator = String.Format("{0} {1} - {2}", "DanfeSharp", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, "https://github.com/SilverCard/DanfeSharp");
-            info.Title = "DANFE (Documento auxiliar da NFe)";
-        }
-
-        private Estilo CriarEstilo(float tFonteCampoCabecalho = 6, float tFonteCampoConteudo = 10)
-        {
-            return new Estilo(_FonteRegular, _FonteNegrito, _FonteItalico, tFonteCampoCabecalho, tFonteCampoConteudo);
-        }
-
-        public void Gerar()
+        public override void Gerar()
         {
             if (_FoiGerado) throw new InvalidOperationException("O Danfe já foi gerado.");
 
-            IdentificacaoEmitente.Logo = _LogoObject;
+            IdentificacaoEmitente.Logo = Logo;
             var tabela = new TabelaProdutosServicos(ViewModel, EstiloPadrao);      
                     
             while (true)
@@ -234,56 +141,5 @@ namespace DanfeSharp
                 Paginas[i].DesenhaNumeroPaginas(i + 1, nFolhas);               
             }
         }
-
-        public void Salvar(String path)
-        {
-            if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException(nameof(path));
-
-            PdfDocument.Save(path);
-        }
-
-        public void Salvar(System.IO.Stream stream)
-        {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-
-            PdfDocument.Save(stream, false);
-        }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    PdfDocument.Dispose();
-                    _LogoObject?.Dispose();
-                    _LogoStream?.Dispose();
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~Danfe() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 }

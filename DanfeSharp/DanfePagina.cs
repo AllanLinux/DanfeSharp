@@ -30,9 +30,7 @@ namespace DanfeSharp
             RetanguloDesenhavel = Retangulo.InflatedRetangle(Danfe.ViewModel.Margem);
             RetanguloCreditos = new RectangleF(RetanguloDesenhavel.X, RetanguloDesenhavel.Bottom + Danfe.EstiloPadrao.PaddingSuperior, RetanguloDesenhavel.Width, Retangulo.Height - RetanguloDesenhavel.Height - Danfe.EstiloPadrao.PaddingSuperior);
 
-            PdfPage = Danfe.PdfDocument.AddPage();
-            PdfPage.Width = XUnit.FromPoint(Retangulo.Width.ToPoint());
-            PdfPage.Height = XUnit.FromPoint(Retangulo.Height.ToPoint());
+            PdfPage = Danfe.AdicionarPagina(Retangulo.Width, Retangulo.Height);
             Gfx = new Gfx(XGraphics.FromPdfPage(PdfPage));
         }
 
