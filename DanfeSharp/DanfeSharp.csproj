@@ -10,12 +10,12 @@
     <PackageId>DanfeSharp.Next</PackageId>
     <Version>3.1.0</Version>
     <Product>DanfeSharp</Product>
-    <Description>Gerador de DANFE em PDF, com suporte ao IBS, CBS e IS da Reforma Tributária (NT 2025.002 e NT 2026.010).</Description>
+    <Description>Gerador em PDF do DANFE (NF-e), DANFE NFC-e, documentos de eventos (carta de correção, cancelamento) e DACTE (CT-e), com suporte ao IBS, CBS e IS da Reforma Tributária (NT 2025.002 e NT 2026.010).</Description>
     <Copyright>Copyright © 2017 Ricardo Brito</Copyright>
     <Authors>Ricardo Brito; Allan Ferreira</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/AllanLinux/DanfeSharp</RepositoryUrl>
-    <PackageTags>nfe;danfe;pdf;ibs;cbs;reforma-tributaria</PackageTags>
+    <PackageTags>nfe;danfe;nfce;cte;dacte;cce;pdf;ibs;cbs;reforma-tributaria</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
