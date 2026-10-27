@@ -1,6 +1,6 @@
 ﻿using DanfeSharp.Graphics;
 using DanfeSharp.Modelo;
-using org.pdfclown.documents.contents.xObjects;
+using PdfSharp.Drawing;
 using System;
 using System.Drawing;
 
@@ -9,7 +9,7 @@ namespace DanfeSharp
     internal class IdentificacaoEmitente : ElementoBase
     {
         public DanfeViewModel ViewModel { get; private set; }
-        public XObject Logo { get;  set; }
+        public XImage Logo { get;  set; }
 
         public IdentificacaoEmitente(Estilo estilo, DanfeViewModel viewModel) : base(estilo)
         {
@@ -43,7 +43,7 @@ namespace DanfeSharp
                 RectangleF rLogo;
 
                 // Logo Horizontal
-                if(Logo.Size.Width > Logo.Size.Height)
+                if(Logo.PointWidth > Logo.PointHeight)
                 {
                     rLogo = new RectangleF(rp.X, rp.Y, rp.Width, alturaMaximaLogoHorizontal);
                     rp = rp.CutTop(alturaMaximaLogoHorizontal);
@@ -51,7 +51,7 @@ namespace DanfeSharp
                 // Logo Vertical / Quadrado
                 else
                 {
-                    float lw = rp.Height * Logo.Size.Width / Logo.Size.Height;
+                    float lw = (float)(rp.Height * Logo.PointWidth / Logo.PointHeight);
                     rLogo = new RectangleF(rp.X, rp.Y, lw, rp.Height);
                     rp = rp.CutLeft(lw);
                 }

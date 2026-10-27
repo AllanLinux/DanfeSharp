@@ -1,6 +1,5 @@
 ﻿using DanfeSharp.Graphics;
 using System;
-using pcf = org.pdfclown.documents.contents.fonts;
 
 namespace DanfeSharp
 {
@@ -14,9 +13,9 @@ namespace DanfeSharp
         public float PaddingHorizontal { get; set; }
         public float FonteTamanhoMinimo { get; set; }
 
-        public pcf.Font FonteInternaRegular { get; set; }
-        public pcf.Font FonteInternaNegrito { get; set; }
-        public pcf.Font FonteInternaItalico { get; set; }
+        public FamiliaFonte FonteInternaRegular { get; set; }
+        public FamiliaFonte FonteInternaNegrito { get; set; }
+        public FamiliaFonte FonteInternaItalico { get; set; }
 
         public Fonte FonteCampoCabecalho { get; private set; }
         public Fonte FonteCampoConteudo { get; private set; }
@@ -24,7 +23,7 @@ namespace DanfeSharp
         public Fonte FonteBlocoCabecalho { get; private set; }
         public Fonte FonteNumeroFolhas { get; private set; }
 
-        public Estilo(pcf.Font fontRegular, pcf.Font fontBold, pcf.Font fontItalic, float tamanhoFonteCampoCabecalho = 6, float tamanhoFonteConteudo = 10)
+        public Estilo(FamiliaFonte fontRegular, FamiliaFonte fontBold, FamiliaFonte fontItalic, float tamanhoFonteCampoCabecalho = 6, float tamanhoFonteConteudo = 10)
         {
             PaddingHorizontal = 0.75F;
             PaddingSuperior = 0.65F;

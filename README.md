@@ -2,7 +2,29 @@
 
 DanfeSharp é uma biblioteca em C# que permite a geração do DANFE em formato PDF.
 
-A biblioteca PDF Clown é utilizada para a escrita dos arquivos em PDF.
+A biblioteca [PDFsharp](https://www.pdfsharp.net/) é utilizada para a escrita dos arquivos em PDF.
+
+## Instalação
+
+```
+dotnet add package DanfeSharp.Next
+```
+
+## Plataformas
+
+| Plataforma | Versão do PDFsharp | Fontes |
+|---|---|---|
+| .NET Framework 4.5.2 ou superior | 1.50 | Times New Roman instalada no Windows |
+| .NET 8 ou superior (Windows, Linux e macOS) | 6.x | Times New Roman ou Liberation Serif instaladas |
+
+No Linux, instale a Liberation Serif, que tem as mesmas métricas da Times New Roman (pacote `fonts-liberation` no Debian/Ubuntu).
+Também é possível informar os arquivos da fonte antes de gerar o primeiro DANFE:
+
+```csharp
+DanfeSharp.Fontes.Registrar("serif-regular.ttf", "serif-negrito.ttf", "serif-italico.ttf");
+```
+
+## Uso
 
 Exemplo de uso:
 ```csharp

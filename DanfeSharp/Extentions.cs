@@ -1,5 +1,4 @@
-﻿using org.pdfclown.documents.contents.composition;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Text;
 
@@ -89,38 +88,5 @@ namespace DanfeSharp
             if (sb.Length > 0) sb.Append(' ');
             return sb.Append(chave).Append(": ").Append(valor);
         }
-
-        public static XAlignmentEnum ToPdfClownAlignment(this AlinhamentoHorizontal ah)
-        {
-            switch (ah)
-            {
-                case AlinhamentoHorizontal.Esquerda:
-                    return XAlignmentEnum.Left;
-                case AlinhamentoHorizontal.Centro:
-                    return XAlignmentEnum.Center;
-                case AlinhamentoHorizontal.Direita:
-                    return XAlignmentEnum.Right;
-            }
-
-            throw new InvalidOperationException();
-        }
-
-        public static YAlignmentEnum ToPdfClownAlignment(this AlinhamentoVertical av)
-        {
-            switch (av)
-            {
-                case AlinhamentoVertical.Topo:
-                    return YAlignmentEnum.Top;
-                case AlinhamentoVertical.Centro:
-                    return YAlignmentEnum.Middle;
-                case AlinhamentoVertical.Base:
-                    return YAlignmentEnum.Bottom;
-            }
-
-            throw new InvalidOperationException();
-        }
-
-
-
     }
 }

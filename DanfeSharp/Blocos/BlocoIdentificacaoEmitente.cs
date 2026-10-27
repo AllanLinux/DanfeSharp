@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using org.pdfclown.documents.contents.xObjects;
+using PdfSharp.Drawing;
 using DanfeSharp.Modelo;
 
 namespace DanfeSharp.Blocos
@@ -63,7 +63,7 @@ namespace DanfeSharp.Blocos
 
         }
 
-        public XObject Logo
+        public XImage Logo
         {
             get => idEmitente.Logo;
             set => idEmitente.Logo = value;

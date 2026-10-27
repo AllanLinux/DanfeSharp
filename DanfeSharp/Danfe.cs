@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using DanfeSharp.Blocos;
-using org.pdfclown.documents;
-using org.pdfclown.documents.contents.fonts;
-using org.pdfclown.files;
+using DanfeSharp.Graphics;
 using DanfeSharp.Modelo;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 
 namespace DanfeSharp
 {
     public class Danfe : IDisposable
     {
         public DanfeViewModel ViewModel { get; private set; }
-        public File File { get; private set; }
-        internal Document PdfDocument { get; private set; }
+        internal PdfDocument PdfDocument { get; private set; }
 
         internal BlocoCanhoto Canhoto { get; private set; }
         internal BlocoIdentificacaoEmitente IdentificacaoEmitente { get; private set; }
@@ -22,28 +22,27 @@ namespace DanfeSharp
 
         internal List<DanfePagina> Paginas { get; private set; }
 
-        private StandardType1Font _FonteRegular;
-        private StandardType1Font _FonteNegrito;
-        private StandardType1Font _FonteItalico;
-        private StandardType1Font.FamilyEnum _FonteFamilia;
+        private FamiliaFonte _FonteRegular;
+        private FamiliaFonte _FonteNegrito;
+        private FamiliaFonte _FonteItalico;
 
         private Boolean _FoiGerado;
 
-        private org.pdfclown.documents.contents.xObjects.XObject _LogoObject = null;
+        private XImage _LogoObject = null;
+        private MemoryStream _LogoStream = null;
 
         public Danfe(DanfeViewModel viewModel)
         {
             ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
 
             _Blocos = new List<BlocoBase>();
-            File = new File();
-            PdfDocument = File.Document;
+            PdfDocument = new PdfDocument();
+            PdfDocument.Options.CompressContentStreams = true;
 
             // De acordo com o item 7.7, a fonte deve ser Times New Roman ou Courier New.
-            _FonteFamilia = StandardType1Font.FamilyEnum.Times;
-            _FonteRegular = new StandardType1Font(PdfDocument, _FonteFamilia, false, false);
-            _FonteNegrito = new StandardType1Font(PdfDocument, _FonteFamilia, true, false);
-            _FonteItalico = new StandardType1Font(PdfDocument, _FonteFamilia, false, true);
+            _FonteRegular = FamiliaFonte.TimesRegular();
+            _FonteNegrito = FamiliaFonte.TimesNegrito();
+            _FonteItalico = FamiliaFonte.TimesItalico();
 
             EstiloPadrao = CriarEstilo();
 
@@ -81,19 +80,38 @@ namespace DanfeSharp
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
-            var img = org.pdfclown.documents.contents.entities.Image.Get(stream);
-            if (img == null) throw new InvalidOperationException("O logotipo não pode ser carregado, certifique-se que a imagem esteja no formato JPEG não progressivo.");
-            _LogoObject = img.ToXObject(PdfDocument);
+            try
+            {
+                DefinirLogo(stream, s => XImage.FromStream(s));
+            }
+            catch (Exception e) when (!(e is ArgumentException))
+            {
+                throw new InvalidOperationException("O logotipo não pode ser carregado, certifique-se que a imagem esteja no formato JPEG, PNG, GIF, BMP ou TIFF.", e);
+            }
         }
 
         public void AdicionarLogoPdf(System.IO.Stream stream)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
-            using (var pdfFile = new org.pdfclown.files.File(new org.pdfclown.bytes.Stream(stream)))
-            {
-                _LogoObject = pdfFile.Document.Pages[0].ToXObject(PdfDocument);
-            }
+            DefinirLogo(stream, s => XPdfForm.FromStream(s));
+        }
+
+        /// <summary>
+        /// Copia o logotipo para a memória, pois o PDFsharp lê o conteúdo novamente ao salvar o DANFE.
+        /// </summary>
+        private void DefinirLogo(System.IO.Stream stream, Func<System.IO.Stream, XImage> carregar)
+        {
+            var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            ms.Position = 0;
+
+            var logo = carregar(ms);
+
+            _LogoObject?.Dispose();
+            _LogoStream?.Dispose();
+            _LogoObject = logo;
+            _LogoStream = ms;
         }
 
         public void AdicionarLogoImagem(String path)
@@ -118,9 +136,9 @@ namespace DanfeSharp
 
         private void AdicionarMetadata()
         {
-            var info = PdfDocument.Information;
-            info[new org.pdfclown.objects.PdfName("ChaveAcesso")] = ViewModel.ChaveAcesso;
-            info[new org.pdfclown.objects.PdfName("TipoDocumento")] = "DANFE";
+            var info = PdfDocument.Info;
+            info.Elements.SetString("/ChaveAcesso", ViewModel.ChaveAcesso);
+            info.Elements.SetString("/TipoDocumento", "DANFE");
             info.CreationDate = DateTime.Now;
             info.Creator = String.Format("{0} {1} - {2}", "DanfeSharp", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, "https://github.com/SilverCard/DanfeSharp");
             info.Title = "DANFE (Documento auxiliar da NFe)";
@@ -154,6 +172,10 @@ namespace DanfeSharp
             }
 
             PreencherNumeroFolhas();
+
+            foreach (var pagina in Paginas)
+                pagina.Gfx.Dispose();
+
             _FoiGerado = true;
 
         }
@@ -217,14 +239,14 @@ namespace DanfeSharp
         {
             if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException(nameof(path));
 
-            File.Save(path, SerializationModeEnum.Incremental);
+            PdfDocument.Save(path);
         }
 
         public void Salvar(System.IO.Stream stream)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
-            File.Save(new org.pdfclown.bytes.Stream(stream), SerializationModeEnum.Incremental);            
+            PdfDocument.Save(stream, false);
         }
 
         #region IDisposable Support
@@ -236,7 +258,9 @@ namespace DanfeSharp
             {
                 if (disposing)
                 {
-                    File.Dispose();
+                    PdfDocument.Dispose();
+                    _LogoObject?.Dispose();
+                    _LogoStream?.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
