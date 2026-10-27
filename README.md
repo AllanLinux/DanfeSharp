@@ -15,6 +15,7 @@ distribuído como o pacote `DanfeSharp.Next`. Os PDFs são escritos com a biblio
 | DANFE NFC-e (modelo 65) | `DanfeSharp.NFCe.Danfce` | Bobina de 80 mm ou 58 mm, com QR Code. Aceita NFC-e em contingência offline, ainda sem protocolo |
 | Eventos da NF-e e da NFC-e | `DanfeSharp.Eventos.DocumentoEvento` | Carta de correção (CC-e), cancelamento, cancelamento por substituição e demais eventos |
 | DACTE do CT-e 4.00 (modelo 57) | `DanfeSharp.CTe.Dacte` | Com QR Code, IBS e CBS quando informados e documentos originários em várias folhas |
+| DANFSe da NFS-e Nacional | `DanfeSharp.NFSe.Danfse` | Leiaute v2.0 do Sistema Nacional NFS-e, com QR Code e os quadros de ISSQN, tributos federais e IBS/CBS |
 
 ## Instalação
 
@@ -23,6 +24,28 @@ dotnet add package DanfeSharp.Next
 ```
 
 Ou, no Visual Studio, procure por `DanfeSharp.Next` no Gerenciador de Pacotes NuGet.
+
+### Pelo GitHub
+
+Cada versão é publicada no GitHub Packages e anexada às
+[Releases](https://github.com/AllanLinux/DanfeSharp.Next/releases) do repositório.
+
+**GitHub Packages:** o GitHub exige autenticação até para pacotes públicos. Crie um token clássico em
+*Settings → Developer settings → Personal access tokens* com a permissão `read:packages` e registre a fonte uma vez:
+
+```
+dotnet nuget add source https://nuget.pkg.github.com/AllanLinux/index.json -n github-allanlinux -u SEU_USUARIO_GITHUB -p SEU_TOKEN
+dotnet add package DanfeSharp.Next
+```
+
+No Linux e no macOS, acrescente `--store-password-in-clear-text` ao primeiro comando.
+
+**Release, sem token:** baixe o `.nupkg` da página de Releases para uma pasta e use-a como fonte:
+
+```
+dotnet nuget add source C:\pacotes -n pacotes-locais
+dotnet add package DanfeSharp.Next
+```
 
 ## Plataformas
 
@@ -140,6 +163,25 @@ using (var dacte = new Dacte(modelo))
 O XML deve ser o CT-e autorizado (`cteProc`). Quando os documentos originários não cabem na primeira folha, eles
 continuam nas folhas seguintes.
 
+### DANFSe (NFS-e Nacional)
+
+```csharp
+using DanfeSharp.NFSe;
+
+var modelo = DanfseViewModelCreator.CriarDeArquivoXml("nfse.xml");
+
+using (var danfse = new Danfse(modelo))
+{
+    danfse.Gerar();
+    danfse.Salvar("danfse.pdf");
+}
+```
+
+O XML deve ser a NFS-e gerada pelo Sistema Nacional NFS-e (`NFSe`, com a DPS dentro). O leiaute segue a DANFSe v2.0
+oficial: grade de 4 colunas, QR Code de consulta pública e os quadros de prestador, tomador, destinatário, intermediário,
+serviço, ISSQN, tributos federais, IBS/CBS e valor total. Os nomes dos municípios vêm da tabela do IBGE embutida na
+biblioteca, pois a NFS-e informa só o código. NFS-e de padrões municipais (ABRASF e outros) não são suportadas.
+
 ### Logotipo
 
 Todos os documentos aceitam o logotipo em imagem (`AdicionarLogoImagem`, JPG ou PNG) ou em PDF (`AdicionarLogoPdf`,
@@ -189,7 +231,9 @@ Os testes geram os PDFs de exemplo na pasta `Output` dentro de `DanfeSharp.Test/
 - Os leiautes da NFC-e, dos eventos e do DACTE ainda não foram conferidos com notas reais. Valide com os seus
   documentos antes de usar em produção.
 - Não há norma que defina o IBS e a CBS no DACTE nem na NFC-e. Os quadros atuais são provisórios.
-- Ainda não são gerados: DANFSe, DAMDFE, NFC-e em A4 e DACTE OS (modelo 67).
+- A DANFSe foi conferida com uma DANFSe oficial e um XML real, mas algumas descrições de códigos (como o tipo de
+  retenção do PIS/COFINS/CSLL) só foram confirmadas para os valores encontrados; os demais aparecem apenas com o código.
+- Ainda não são gerados: DAMDFE, NFC-e em A4 e DACTE OS (modelo 67).
 
 ## Licença
 

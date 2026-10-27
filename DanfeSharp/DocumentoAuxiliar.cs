@@ -7,7 +7,7 @@ using PdfSharp.Pdf;
 namespace DanfeSharp
 {
     /// <summary>
-    /// Base dos documentos auxiliares (DANFE, DANFE NFC-e, eventos e DACTE): documento PDF, fontes, logotipo e gravação.
+    /// Base dos documentos auxiliares (DANFE, DANFE NFC-e, eventos, DACTE e DANFSe): documento PDF, fontes, logotipo e gravação.
     /// </summary>
     public abstract class DocumentoAuxiliar : IDisposable
     {
