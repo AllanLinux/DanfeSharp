@@ -82,6 +82,73 @@ namespace DanfeSharp.Esquemas.NFe
     public class NFe
     {
         public InfNFe infNFe { get; set; }
+
+        /// <summary>
+        /// Informações suplementares da NFC-e: QR Code e URL de consulta - ZX01
+        /// </summary>
+        public InfNFeSupl infNFeSupl { get; set; }
+    }
+
+    /// <summary>
+    /// Informações suplementares da Nota Fiscal - ZX01
+    /// </summary>
+    [Serializable]
+    [XmlType(AnonymousType = true, Namespace = Namespaces.NFe)]
+    public class InfNFeSupl
+    {
+        /// <summary>
+        /// Texto com o QR Code impresso no DANFE NFC-e - ZX02
+        /// </summary>
+        public string qrCode { get; set; }
+
+        /// <summary>
+        /// URL de consulta por chave de acesso a ser impressa no DANFE NFC-e - ZX03
+        /// </summary>
+        public string urlChave { get; set; }
+    }
+
+    /// <summary>
+    /// Grupo de informações de pagamento - YA01
+    /// </summary>
+    [Serializable]
+    [XmlType(AnonymousType = true, Namespace = Namespaces.NFe)]
+    public class Pagamento
+    {
+        [XmlElement("detPag")]
+        public List<DetalhePagamento> detPag { get; set; }
+
+        /// <summary>
+        /// Valor do troco - YA09
+        /// </summary>
+        public double? vTroco { get; set; }
+
+        public Pagamento()
+        {
+            detPag = new List<DetalhePagamento>();
+        }
+    }
+
+    /// <summary>
+    /// Grupo detalhamento da forma de pagamento - YA01a
+    /// </summary>
+    [Serializable]
+    [XmlType(AnonymousType = true, Namespace = Namespaces.NFe)]
+    public class DetalhePagamento
+    {
+        /// <summary>
+        /// Meio de pagamento - YA02
+        /// </summary>
+        public string tPag { get; set; }
+
+        /// <summary>
+        /// Descrição do meio de pagamento, quando tPag = 99 - YA02a
+        /// </summary>
+        public string xPag { get; set; }
+
+        /// <summary>
+        /// Valor do pagamento - YA03
+        /// </summary>
+        public double vPag { get; set; }
     }
 
 
@@ -320,6 +387,16 @@ namespace DanfeSharp.Esquemas.NFe
         public string vTotTrib { get; set; }
         public ProdutoICMS ICMS { get; set; }
         public ProdutoIPI IPI { get; set; }
+
+        /// <summary>
+        /// Imposto Seletivo - UB01 (NT 2025.002-RTC)
+        /// </summary>
+        public ImpostoSeletivo IS { get; set; }
+
+        /// <summary>
+        /// IBS e CBS - UB12 (NT 2025.002-RTC)
+        /// </summary>
+        public ImpostoIBSCBS IBSCBS { get; set; }
     }
 
     /// <summary>
@@ -518,6 +595,45 @@ namespace DanfeSharp.Esquemas.NFe
 
 
         public double? vTotTrib { get; set; }
+
+        #region Campos exibidos no quadro "Total do ICMS/IPI" da NT 2026.010
+
+        /// <summary>
+        /// Valor total do FCP - W04h
+        /// </summary>
+        public double? vFCP { get; set; }
+
+        /// <summary>
+        /// Valor total do FCP retido por substituição tributária - W06a
+        /// </summary>
+        public double? vFCPST { get; set; }
+
+        /// <summary>
+        /// Valor total do FCP retido anteriormente por substituição tributária
+        /// </summary>
+        public double? vFCPSTRet { get; set; }
+
+        /// <summary>
+        /// Quantidade tributada do ICMS monofásico próprio - W06b.1
+        /// </summary>
+        public double? qBCMono { get; set; }
+
+        /// <summary>
+        /// Valor total do ICMS monofásico próprio - W06c
+        /// </summary>
+        public double? vICMSMono { get; set; }
+
+        /// <summary>
+        /// Quantidade tributada do ICMS monofásico sujeito a retenção - W06c.1
+        /// </summary>
+        public double? qBCMonoReten { get; set; }
+
+        /// <summary>
+        /// Valor total do ICMS monofásico sujeito a retenção - W06d
+        /// </summary>
+        public double? vICMSMonoReten { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -541,6 +657,21 @@ namespace DanfeSharp.Esquemas.NFe
     {
         public ICMSTotal ICMSTot { get; set; }
         public ISSQNTotal ISSQNtot { get; set; }
+
+        /// <summary>
+        /// Total do Imposto Seletivo - W31 (NT 2025.002-RTC)
+        /// </summary>
+        public ISTotal ISTot { get; set; }
+
+        /// <summary>
+        /// Total do IBS e da CBS - W34 (NT 2025.002-RTC)
+        /// </summary>
+        public IBSCBSTotal IBSCBSTot { get; set; }
+
+        /// <summary>
+        /// Valor total da NF-e com IBS, CBS e IS (NT 2025.002-RTC)
+        /// </summary>
+        public double? vNFTot { get; set; }
     }
 
 
@@ -670,6 +801,11 @@ namespace DanfeSharp.Esquemas.NFe
         /// Informação adicional de compra
         /// </summary>
         public InfCompra compra { get; set; }
+
+        /// <summary>
+        /// Grupo de informações de pagamento - YA01
+        /// </summary>
+        public Pagamento pag { get; set; }
 
         [XmlAttribute(DataType = "ID")]
         public string Id { get; set; }

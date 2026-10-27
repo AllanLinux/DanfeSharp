@@ -1,5 +1,4 @@
 ﻿using DanfeSharp.Graphics;
-using org.pdfclown.documents.contents.colorSpaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -166,12 +165,12 @@ namespace DanfeSharp
                 {
                     if (LinhaAtual > 0)
                     {
-                        gfx.PrimitiveComposer.BeginLocalState();
-                        gfx.PrimitiveComposer.SetStrokeColor(new DeviceRGBColor(0.5, 0.5, 0.5));
-                        gfx.PrimitiveComposer.SetLineDash(new org.pdfclown.documents.contents.LineDash(new double[] { 6, 1 }));
-                        gfx.PrimitiveComposer.DrawLine(new PointF(BoundingBox.Left, _DY1).ToPointMeasure(), new PointF(BoundingBox.Right, _DY1).ToPointMeasure());
-                        gfx.PrimitiveComposer.Stroke();
-                        gfx.PrimitiveComposer.End();
+                        gfx.BeginLocalState();
+                        gfx.SetStrokeColor(0.5, 0.5, 0.5);
+                        gfx.SetLineDash(6, 1);
+                        gfx.DrawLine(new PointF(BoundingBox.Left, _DY1), new PointF(BoundingBox.Right, _DY1));
+                        gfx.Stroke();
+                        gfx.EndLocalState();
                     }
 
                     LinhaAtual++;

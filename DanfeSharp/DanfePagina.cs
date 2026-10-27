@@ -3,16 +3,15 @@ using System.Drawing;
 using System.Linq;
 using DanfeSharp.Blocos;
 using DanfeSharp.Graphics;
-using org.pdfclown.documents;
-using org.pdfclown.documents.contents.composition;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 
 namespace DanfeSharp
 {
     internal class DanfePagina
     {
         public Danfe Danfe { get; private set; }
-        public Page PdfPage { get; private set; }
-        public PrimitiveComposer PrimitiveComposer { get; private set; }
+        public PdfPage PdfPage { get; private set; }
         public Gfx Gfx { get; private set; }
         public RectangleF RetanguloNumeroFolhas { get;  set; }
         public RectangleF RetanguloCorpo { get; private set; }
@@ -23,12 +22,6 @@ namespace DanfeSharp
         public DanfePagina(Danfe danfe)
         {
             Danfe = danfe ?? throw new ArgumentNullException(nameof(danfe));
-            PdfPage = new Page(Danfe.PdfDocument);
-            Danfe.PdfDocument.Pages.Add(PdfPage);
-         
-            PrimitiveComposer = new PrimitiveComposer(PdfPage);
-            Gfx = new Gfx(PrimitiveComposer);
-
             if (Danfe.ViewModel.Orientacao == Orientacao.Retrato)            
                 Retangulo = new RectangleF(0, 0, Constantes.A4Largura, Constantes.A4Altura);            
             else            
@@ -36,7 +29,9 @@ namespace DanfeSharp
             
             RetanguloDesenhavel = Retangulo.InflatedRetangle(Danfe.ViewModel.Margem);
             RetanguloCreditos = new RectangleF(RetanguloDesenhavel.X, RetanguloDesenhavel.Bottom + Danfe.EstiloPadrao.PaddingSuperior, RetanguloDesenhavel.Width, Retangulo.Height - RetanguloDesenhavel.Height - Danfe.EstiloPadrao.PaddingSuperior);
-            PdfPage.Size = new SizeF(Retangulo.Width.ToPoint(), Retangulo.Height.ToPoint());    
+
+            PdfPage = Danfe.AdicionarPagina(Retangulo.Width, Retangulo.Height);
+            Gfx = new Gfx(XGraphics.FromPdfPage(PdfPage));
         }
 
         public void DesenharCreditos()
@@ -66,8 +61,8 @@ namespace DanfeSharp
             else
             {
                 canhoto.Width = RetanguloDesenhavel.Height;
-                Gfx.PrimitiveComposer.BeginLocalState();
-                Gfx.PrimitiveComposer.Rotate(90, new PointF(0, canhoto.Width + canhoto.X + canhoto.Y).ToPointMeasure());
+                Gfx.BeginLocalState();
+                Gfx.Rotacionar90AntiHorario(canhoto.Width + canhoto.X + canhoto.Y);
 
                 for (int i = 0; i < Danfe.ViewModel.QuantidadeCanhotos; i++)
                 {
@@ -75,7 +70,7 @@ namespace DanfeSharp
                     canhoto.Y += canhoto.Height;
                 }              
 
-                Gfx.PrimitiveComposer.End();
+                Gfx.EndLocalState();
                 RetanguloDesenhavel = RetanguloDesenhavel.CutLeft(canhoto.Height * Danfe.ViewModel.QuantidadeCanhotos);
 
             }
@@ -97,10 +92,10 @@ namespace DanfeSharp
                         .AddLine("SEM VALOR FISCAL", Danfe.EstiloPadrao.CriarFonteRegular(48))
                         .AddLine("AMBIENTE DE HOMOLOGAÇÃO", Danfe.EstiloPadrao.CriarFonteRegular(30));
 
-            Gfx.PrimitiveComposer.BeginLocalState();
-            Gfx.PrimitiveComposer.SetFillColor(new org.pdfclown.documents.contents.colorSpaces.DeviceRGBColor(0.35, 0.35, 0.35));
+            Gfx.BeginLocalState();
+            Gfx.SetFillColor(0.35, 0.35, 0.35);
             ts.Draw(Gfx);
-            Gfx.PrimitiveComposer.End();
+            Gfx.EndLocalState();
         }
 
         public void DesenharBlocos(bool isPrimeirapagina = false)

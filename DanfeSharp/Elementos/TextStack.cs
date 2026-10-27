@@ -48,7 +48,7 @@ namespace DanfeSharp
 
                 if (w > BoundingBox.Width)
                 {
-                    fonts[i] = new Fonte(_Fonts[i].FonteInterna, BoundingBox.Width * _Fonts[i].Tamanho / w);
+                    fonts[i] = new Fonte(_Fonts[i].Familia, BoundingBox.Width * _Fonts[i].Tamanho / w);
                 }
                 else
                 {

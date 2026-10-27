@@ -227,6 +227,17 @@ namespace DanfeSharp.Modelo
         /// </summary>
         public bool PreferirEmitenteNomeFantasia { get; set; } = true;
 
+        /// <summary>
+        /// Usa o leiaute da Reforma Tributária (NT 2026.010): CRT no quadro do emitente, quadro "Total do IBS/CBS/IS" e
+        /// tributos do IBS, CBS e IS na tabela de produtos. Quando nulo, o leiaute é usado se a nota possuir IBS, CBS ou IS.
+        /// </summary>
+        public bool? ExibirLeiauteReformaTributaria { get; set; } = null;
+
+        /// <summary>
+        /// Indica se o leiaute da Reforma Tributária (NT 2026.010) será usado.
+        /// </summary>
+        public bool UsarLeiauteReformaTributaria => ExibirLeiauteReformaTributaria ?? (CalculoImposto.PossuiIbsCbsIs || Produtos.Exists(p => p.PossuiIbsCbsIs));
+
 
         #endregion
 
@@ -347,6 +358,28 @@ namespace DanfeSharp.Modelo
                 sb.Append(nfref);
             }
 
+
+            #region Leiaute da Reforma Tributária (NT 2026.010)
+
+            // Valores que não têm campo nos quadros de totais da NT 2026.010.
+            if (UsarLeiauteReformaTributaria)
+            {
+                var c = CalculoImposto;
+                var valores = new StringBuilder();
+
+                if (ExibirPisConfins && c.ValorPis > 0) valores.AppendChaveValor("Valor do PIS", ((double?)c.ValorPis).FormatarMoeda());
+                if (ExibirPisConfins && c.ValorCofins > 0) valores.AppendChaveValor("Valor da COFINS", ((double?)c.ValorCofins).FormatarMoeda());
+                if (c.ValorII > 0) valores.AppendChaveValor("Valor do II", ((double?)c.ValorII).FormatarMoeda());
+                if (ExibirIcmsInterestadual && c.vICMSUFRemet > 0) valores.AppendChaveValor("Valor do ICMS UF remetente", c.vICMSUFRemet.FormatarMoeda());
+
+                if (valores.Length > 0)
+                {
+                    if (sb.Length > 0) sb.Append("\r\n");
+                    sb.Append(valores);
+                }
+            }
+
+            #endregion
 
             #region NT 2013.003 Lei da Transparência
 

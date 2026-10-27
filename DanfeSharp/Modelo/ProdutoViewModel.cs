@@ -96,10 +96,97 @@ namespace DanfeSharp.Modelo
         public double? AliquotaIpi { get; set; }
 
         /// <summary>
+        /// <para>Valor da BC do IPI</para>
+        /// <para>Tag vBC</para>
+        /// </summary>
+        public double? BaseIpi { get; set; }
+
+        /// <summary>
         /// <para>Valor aproximado total de tributos federais, estaduais e municipais. [NT2013.003]</para>
         /// <para>Tag vTotTrib</para>
         /// </summary>
         public double? ValorAproximadoTributos { get; set; }
+
+        #region Reforma Tributária - IBS, CBS e IS (NT 2025.002-RTC e NT 2026.010)
+
+        /// <summary>
+        /// <para>Código de Situação Tributária do IBS e da CBS</para>
+        /// <para>Tag CST - UB13</para>
+        /// </summary>
+        public String CstIbsCbs { get; set; }
+
+        /// <summary>
+        /// <para>Classificação Tributária do IBS e da CBS</para>
+        /// <para>Tag cClassTrib - UB14</para>
+        /// </summary>
+        public String ClassificacaoTributaria { get; set; }
+
+        /// <summary>
+        /// <para>Base de Cálculo do IBS e da CBS</para>
+        /// <para>Tag vBC - UB16</para>
+        /// </summary>
+        public double? BaseIbsCbs { get; set; }
+
+        /// <summary>
+        /// <para>Alíquota do IBS UF, ou a alíquota efetiva quando houver redução</para>
+        /// <para>Tag pIBSUF - UB18 ou pAliqEfet - UB28</para>
+        /// </summary>
+        public double? AliquotaIbsUf { get; set; }
+
+        /// <summary>
+        /// <para>Valor do IBS UF</para>
+        /// <para>Tag vIBSUF - UB35</para>
+        /// </summary>
+        public double? ValorIbsUf { get; set; }
+
+        /// <summary>
+        /// <para>Alíquota do IBS Município, ou a alíquota efetiva quando houver redução</para>
+        /// <para>Tag pIBSMun - UB37 ou pAliqEfet - UB47</para>
+        /// </summary>
+        public double? AliquotaIbsMunicipio { get; set; }
+
+        /// <summary>
+        /// <para>Valor do IBS Município</para>
+        /// <para>Tag vIBSMun - UB54</para>
+        /// </summary>
+        public double? ValorIbsMunicipio { get; set; }
+
+        /// <summary>
+        /// <para>Alíquota da CBS, ou a alíquota efetiva quando houver redução</para>
+        /// <para>Tag pCBS - UB56 ou pAliqEfet - UB66</para>
+        /// </summary>
+        public double? AliquotaCbs { get; set; }
+
+        /// <summary>
+        /// <para>Valor da CBS</para>
+        /// <para>Tag vCBS - UB67</para>
+        /// </summary>
+        public double? ValorCbs { get; set; }
+
+        /// <summary>
+        /// <para>Base de Cálculo do Imposto Seletivo</para>
+        /// <para>Tag vBCIS - UB05</para>
+        /// </summary>
+        public double? BaseIs { get; set; }
+
+        /// <summary>
+        /// <para>Alíquota do Imposto Seletivo</para>
+        /// <para>Tag pIS - UB06</para>
+        /// </summary>
+        public double? AliquotaIs { get; set; }
+
+        /// <summary>
+        /// <para>Valor do Imposto Seletivo</para>
+        /// <para>Tag vIS - UB11</para>
+        /// </summary>
+        public double? ValorIs { get; set; }
+
+        /// <summary>
+        /// Verdadeiro quando o item possui informações de IBS, CBS ou IS.
+        /// </summary>
+        public bool PossuiIbsCbsIs => !String.IsNullOrWhiteSpace(ClassificacaoTributaria) || BaseIbsCbs.HasValue || ValorIs.HasValue;
+
+        #endregion
 
         public ProdutoViewModel()
         {

@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using org.pdfclown.documents.contents.xObjects;
+using PdfSharp.Drawing;
 using DanfeSharp.Modelo;
 
 namespace DanfeSharp.Blocos
@@ -51,9 +51,19 @@ namespace DanfeSharp.Blocos
                 .ComCampo("Cnpj", Formatador.FormatarCnpj(ViewModel.Emitente.CnpjCpf), AlinhamentoHorizontal.Centro)
                 .ComLargurasIguais();
 
+            if (ViewModel.UsarLeiauteReformaTributaria)
+            {
+                // NT 2026.010 item 4.2: CRT e área reservada ao Tipo de Regime de Apuração do IBS e da CBS,
+                // que fica em branco enquanto não houver tag publicada.
+                AdicionarLinhaCampos()
+                    .ComCampo("Código do Regime Tributário", ViewModel.Emitente.CrtDescricao, AlinhamentoHorizontal.Centro)
+                    .ComCampo("Tipo de Regime de Apuração do IBS e da CBS", null, AlinhamentoHorizontal.Centro)
+                    .ComLarguras(100F / 3F, 0);
+            }
+
         }
 
-        public XObject Logo
+        public XImage Logo
         {
             get => idEmitente.Logo;
             set => idEmitente.Logo = value;

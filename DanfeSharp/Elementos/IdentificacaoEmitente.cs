@@ -1,6 +1,6 @@
 ﻿using DanfeSharp.Graphics;
 using DanfeSharp.Modelo;
-using org.pdfclown.documents.contents.xObjects;
+using PdfSharp.Drawing;
 using System;
 using System.Drawing;
 
@@ -8,12 +8,18 @@ namespace DanfeSharp
 {
     internal class IdentificacaoEmitente : ElementoBase
     {
-        public DanfeViewModel ViewModel { get; private set; }
-        public XObject Logo { get;  set; }
+        public EmpresaViewModel Emitente { get; private set; }
+        public bool PreferirNomeFantasia { get; private set; }
+        public XImage Logo { get;  set; }
 
-        public IdentificacaoEmitente(Estilo estilo, DanfeViewModel viewModel) : base(estilo)
+        public IdentificacaoEmitente(Estilo estilo, DanfeViewModel viewModel) : this(estilo, viewModel.Emitente, viewModel.PreferirEmitenteNomeFantasia)
         {
-            ViewModel = viewModel;
+        }
+
+        public IdentificacaoEmitente(Estilo estilo, EmpresaViewModel emitente, bool preferirNomeFantasia) : base(estilo)
+        {
+            Emitente = emitente;
+            PreferirNomeFantasia = preferirNomeFantasia;
             Logo = null;
         }
 
@@ -43,7 +49,7 @@ namespace DanfeSharp
                 RectangleF rLogo;
 
                 // Logo Horizontal
-                if(Logo.Size.Width > Logo.Size.Height)
+                if(Logo.PointWidth > Logo.PointHeight)
                 {
                     rLogo = new RectangleF(rp.X, rp.Y, rp.Width, alturaMaximaLogoHorizontal);
                     rp = rp.CutTop(alturaMaximaLogoHorizontal);
@@ -51,7 +57,7 @@ namespace DanfeSharp
                 // Logo Vertical / Quadrado
                 else
                 {
-                    float lw = rp.Height * Logo.Size.Width / Logo.Size.Height;
+                    float lw = (float)(rp.Height * Logo.PointWidth / Logo.PointHeight);
                     rLogo = new RectangleF(rp.X, rp.Y, lw, rp.Height);
                     rp = rp.CutLeft(lw);
                 }
@@ -60,11 +66,11 @@ namespace DanfeSharp
           
             }
 
-            var emitente = ViewModel.Emitente;
+            var emitente = Emitente;
 
             string nome = emitente.RazaoSocial;
 
-            if (ViewModel.PreferirEmitenteNomeFantasia)
+            if (PreferirNomeFantasia)
             {
                 nome = !String.IsNullOrWhiteSpace(emitente.NomeFantasia) ? emitente.NomeFantasia : emitente.RazaoSocial;
             } 

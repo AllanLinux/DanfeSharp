@@ -101,6 +101,24 @@ namespace DanfeSharp.Modelo
         public String CRT { get; set; }
 
         /// <summary>
+        /// Código de Regime Tributário com a sua descrição, ex.: 3 - Regime Normal
+        /// </summary>
+        public String CrtDescricao
+        {
+            get
+            {
+                switch (CRT)
+                {
+                    case "1": return "1 - Simples Nacional";
+                    case "2": return "2 - Simples Nac. Excesso Sublimite";
+                    case "3": return "3 - Regime Normal";
+                    case "4": return "4 - Simples Nacional - MEI";
+                    default: return CRT;
+                }
+            }
+        }
+
+        /// <summary>
         /// Linha 1 do Endereço
         /// </summary>
         public String EnderecoLinha1

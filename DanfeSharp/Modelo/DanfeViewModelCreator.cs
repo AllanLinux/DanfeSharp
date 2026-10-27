@@ -13,7 +13,7 @@ namespace DanfeSharp.Modelo
     {
         public readonly static IEnumerable<FormaEmissao> FormasEmissaoSuportadas = new FormaEmissao[]{ FormaEmissao.Normal, FormaEmissao.ContingenciaSVCAN, FormaEmissao.ContingenciaSVCRS };
 
-        private static EmpresaViewModel CreateEmpresaFrom(Empresa empresa)
+        internal static EmpresaViewModel CreateEmpresaFrom(Empresa empresa)
         {
             EmpresaViewModel model = new EmpresaViewModel();
 
@@ -180,8 +180,118 @@ namespace DanfeSharp.Modelo
                 ValorTotalNota = i.vNF,
                 vFCPUFDest = i.vFCPUFDest,
                 vICMSUFDest = i.vICMSUFDest,
-                vICMSUFRemet = i.vICMSUFRemet
+                vICMSUFRemet = i.vICMSUFRemet,
+                ValorFcp = i.vFCP,
+                ValorFcpSt = i.vFCPST,
+                QuantidadeBaseIcmsMonofasico = i.qBCMono,
+                ValorIcmsMonofasico = i.vICMSMono,
+                QuantidadeBaseIcmsMonofasicoRetencao = i.qBCMonoReten,
+                ValorIcmsMonofasicoRetencao = i.vICMSMonoReten
             };
+        }
+
+        /// <summary>
+        /// Extrai os totais do IBS, CBS e IS (NT 2025.002-RTC).
+        /// </summary>
+        internal static void ExtrairTotaisReformaTributaria(CalculoImpostoViewModel m, Total total)
+        {
+            m.ValorImpostoSeletivo = total.ISTot?.vIS;
+            m.ValorTotalNotaComIbsCbsIs = total.vNFTot;
+
+            var t = total.IBSCBSTot;
+            if (t == null) return;
+
+            m.BaseCalculoIbsCbs = t.vBCIBSCBS;
+            m.ValorIbs = t.gIBS?.vIBS;
+            m.ValorIbsUf = t.gIBS?.gIBSUF?.vIBSUF;
+            m.ValorIbsMunicipio = t.gIBS?.gIBSMun?.vIBSMun;
+            m.ValorCbs = t.gCBS?.vCBS;
+
+            var mono = t.gMono;
+
+            if (mono != null)
+            {
+                m.ValorIbsMonofasico = mono.vIBSMono;
+                m.ValorCbsMonofasica = mono.vCBSMono;
+                m.ValorIbsMonofasicoRetencao = mono.vIBSMonoReten;
+                m.ValorCbsMonofasicaRetencao = mono.vCBSMonoReten;
+            }
+        }
+
+        /// <summary>
+        /// Cria o modelo de um item da NF-e ou da NFC-e.
+        /// </summary>
+        internal static ProdutoViewModel CriarProduto(Detalhe det)
+        {
+            ProdutoViewModel produto = new ProdutoViewModel();
+            produto.Codigo = det.prod.cProd;
+            produto.Descricao = det.prod.xProd;
+            produto.Ncm = det.prod.NCM;
+            produto.Cfop = det.prod.CFOP;
+            produto.Unidade = det.prod.uCom;
+            produto.Quantidade = det.prod.qCom;
+            produto.ValorUnitario = det.prod.vUnCom;
+            produto.ValorTotal = det.prod.vProd;
+            produto.InformacoesAdicionais = det.infAdProd;
+
+            var imposto = det.imposto;
+
+            if (imposto != null)
+            {
+                if (imposto.ICMS != null)
+                {
+                    var icms = imposto.ICMS.ICMS;
+
+                    if (icms != null)
+                    {
+                        produto.ValorIcms = icms.vICMS;
+                        produto.BaseIcms = icms.vBC;
+                        produto.AliquotaIcms = icms.pICMS;
+                        produto.OCst = icms.orig + icms.CST + icms.CSOSN;
+                    }
+                }
+
+                if (imposto.IPI != null)
+                {
+                    var ipi = imposto.IPI.IPITrib;
+
+                    if (ipi != null)
+                    {
+                        produto.ValorIpi = ipi.vIPI;
+                        produto.AliquotaIpi = ipi.pIPI;
+                        produto.BaseIpi = ipi.vBC;
+                    }
+                }
+
+                if (imposto.IBSCBS != null)
+                {
+                    var ibsCbs = imposto.IBSCBS;
+                    produto.CstIbsCbs = ibsCbs.CST;
+                    produto.ClassificacaoTributaria = ibsCbs.cClassTrib;
+
+                    var g = ibsCbs.gIBSCBS;
+
+                    if (g != null)
+                    {
+                        produto.BaseIbsCbs = g.vBC;
+                        produto.AliquotaIbsUf = g.gIBSUF?.AliquotaDanfe;
+                        produto.ValorIbsUf = g.gIBSUF?.vIBSUF;
+                        produto.AliquotaIbsMunicipio = g.gIBSMun?.AliquotaDanfe;
+                        produto.ValorIbsMunicipio = g.gIBSMun?.vIBSMun;
+                        produto.AliquotaCbs = g.gCBS?.AliquotaDanfe;
+                        produto.ValorCbs = g.gCBS?.vCBS;
+                    }
+                }
+
+                if (imposto.IS != null)
+                {
+                    produto.BaseIs = imposto.IS.vBCIS;
+                    produto.AliquotaIs = imposto.IS.pIS;
+                    produto.ValorIs = imposto.IS.vIS;
+                }
+            }
+
+            return produto;
         }
 
         public static DanfeViewModel CreateFromXml(ProcNFe procNfe)
@@ -195,7 +305,7 @@ namespace DanfeSharp.Modelo
 
             if (ide.mod != 55)
             {
-                throw new NotSupportedException("Somente o mod==55 está implementado.");
+                throw new NotSupportedException("O DANFE é gerado apenas para a NF-e (mod 55). Para a NFC-e (mod 65), use DanfeSharp.NFCe.Danfce.");
             }
 
             if(!FormasEmissaoSuportadas.Contains(model.TipoEmissao))
@@ -242,47 +352,7 @@ namespace DanfeSharp.Modelo
 
             foreach (var det in infNfe.det)
             {
-                ProdutoViewModel produto = new ProdutoViewModel();
-                produto.Codigo = det.prod.cProd;
-                produto.Descricao = det.prod.xProd;
-                produto.Ncm = det.prod.NCM;
-                produto.Cfop = det.prod.CFOP;
-                produto.Unidade = det.prod.uCom;
-                produto.Quantidade = det.prod.qCom;
-                produto.ValorUnitario = det.prod.vUnCom;
-                produto.ValorTotal = det.prod.vProd;
-                produto.InformacoesAdicionais = det.infAdProd;
-
-                var imposto = det.imposto;
-
-                if (imposto != null)
-                {
-                    if (imposto.ICMS != null)
-                    {
-                        var icms = imposto.ICMS.ICMS;
-
-                        if (icms != null)
-                        {
-                            produto.ValorIcms = icms.vICMS;
-                            produto.BaseIcms = icms.vBC;
-                            produto.AliquotaIcms = icms.pICMS;
-                            produto.OCst = icms.orig + icms.CST + icms.CSOSN;
-                        }
-                    }
-
-                    if (imposto.IPI != null)
-                    {
-                        var ipi = imposto.IPI.IPITrib;
-
-                        if (ipi != null)
-                        {
-                            produto.ValorIpi = ipi.vIPI;
-                            produto.AliquotaIpi = ipi.pIPI;
-                        }
-                    }
-                }
-
-                model.Produtos.Add(produto);
+                model.Produtos.Add(CriarProduto(det));
             }
 
             if (infNfe.cobr != null)
@@ -299,6 +369,7 @@ namespace DanfeSharp.Modelo
             }
 
             model.CalculoImposto = CriarCalculoImpostoViewModel(infNfe.total.ICMSTot);
+            ExtrairTotaisReformaTributaria(model.CalculoImposto, infNfe.total);
 
             var issqnTotal = infNfe.total.ISSQNtot;
 
