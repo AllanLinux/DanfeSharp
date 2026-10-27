@@ -24,6 +24,28 @@ dotnet add package DanfeSharp.Next
 
 Ou, no Visual Studio, procure por `DanfeSharp.Next` no Gerenciador de Pacotes NuGet.
 
+### Pelo GitHub
+
+Cada versão é publicada no GitHub Packages e anexada às
+[Releases](https://github.com/AllanLinux/DanfeSharp.Next/releases) do repositório.
+
+**GitHub Packages:** o GitHub exige autenticação até para pacotes públicos. Crie um token clássico em
+*Settings → Developer settings → Personal access tokens* com a permissão `read:packages` e registre a fonte uma vez:
+
+```
+dotnet nuget add source https://nuget.pkg.github.com/AllanLinux/index.json -n github-allanlinux -u SEU_USUARIO_GITHUB -p SEU_TOKEN
+dotnet add package DanfeSharp.Next
+```
+
+No Linux e no macOS, acrescente `--store-password-in-clear-text` ao primeiro comando.
+
+**Release, sem token:** baixe o `.nupkg` da página de Releases para uma pasta e use-a como fonte:
+
+```
+dotnet nuget add source C:\pacotes -n pacotes-locais
+dotnet add package DanfeSharp.Next
+```
+
 ## Plataformas
 
 | Plataforma | Versão do PDFsharp | Fontes |
