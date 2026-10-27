@@ -181,6 +181,7 @@ namespace DanfeSharp
 
         public static String FormatarChaveAcesso(String chaveAcesso)
         {
+            if (String.IsNullOrWhiteSpace(chaveAcesso)) return String.Empty;
             return Regex.Replace(chaveAcesso, ".{4}", "$0 ").TrimEnd();
         }
 

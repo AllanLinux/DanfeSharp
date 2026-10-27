@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Evento fictício (homologação) sem layout específico, para testar a exibição genérica dos campos. -->
+<procEventoNFe versao="1.00" xmlns="http://www.portalfiscal.inf.br/nfe">
+    <evento versao="1.00">
+        <infEvento Id="ID1121104126101234567800019555001000001234100001234501">
+            <cOrgao>41</cOrgao>
+            <tpAmb>2</tpAmb>
+            <CNPJ>12345678000195</CNPJ>
+            <chNFe>41261012345678000195550010000012341000012345</chNFe>
+            <dhEvento>2026-10-22T09:00:00-03:00</dhEvento>
+            <tpEvento>112110</tpEvento>
+            <nSeqEvento>1</nSeqEvento>
+            <verEvento>1.00</verEvento>
+            <detEvento versao="1.00">
+                <descEvento>Informacao de efetivo pagamento integral para liberar credito presumido do adquirente</descEvento>
+                <cOrgaoAutor>41</cOrgaoAutor>
+                <tpAutor>1</tpAutor>
+                <verAplic>DanfeSharp</verAplic>
+                <indQuitacao>1</indQuitacao>
+            </detEvento>
+        </infEvento>
+    </evento>
+    <retEvento versao="1.00">
+        <infEvento>
+            <tpAmb>2</tpAmb>
+            <verAplic>DanfeSharp</verAplic>
+            <cOrgao>41</cOrgao>
+            <cStat>135</cStat>
+            <xMotivo>Evento registrado e vinculado a NF-e</xMotivo>
+            <chNFe>41261012345678000195550010000012341000012345</chNFe>
+            <tpEvento>112110</tpEvento>
+            <xEvento>Evento registrado</xEvento>
+            <nSeqEvento>1</nSeqEvento>
+            <dhRegEvento>2026-10-22T09:00:03-03:00</dhRegEvento>
+            <nProt>141260000099003</nProt>
+        </infEvento>
+    </retEvento>
+</procEventoNFe>
