@@ -13,7 +13,7 @@ namespace DanfeSharp
         public CampoMultilinha(String cabecalho, String conteudo, Estilo estilo, AlinhamentoHorizontal alinhamentoHorizontalConteudo = AlinhamentoHorizontal.Esquerda)
               : base(cabecalho, conteudo, estilo, alinhamentoHorizontalConteudo)
         {
-            _tbConteudo = new TextBlock(conteudo, estilo.FonteCampoConteudo);
+            _tbConteudo = new TextBlock(conteudo ?? String.Empty, estilo.FonteCampoConteudo);
             IsConteudoNegrito = false;
         }
 

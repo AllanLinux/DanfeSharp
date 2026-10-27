@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CT-e fictício de homologação, modal rodoviário, com IBS/CBS e três NF-e. -->
+<cteProc versao="4.00" xmlns="http://www.portalfiscal.inf.br/cte">
+    <CTe xmlns="http://www.portalfiscal.inf.br/cte">
+        <infCte Id="CTe41261098765432000110570010000045671000045675" versao="4.00">
+            <ide>
+                <cUF>41</cUF>
+                <cCT>00004567</cCT>
+                <CFOP>6352</CFOP>
+                <natOp>PRESTACAO DE SERVICO DE TRANSPORTE A ESTABELECIMENTO INDUSTRIAL</natOp>
+                <mod>57</mod>
+                <serie>1</serie>
+                <nCT>4567</nCT>
+                <dhEmi>2026-10-22T08:30:00-03:00</dhEmi>
+                <tpImp>1</tpImp>
+                <tpEmis>1</tpEmis>
+                <cDV>5</cDV>
+                <tpAmb>2</tpAmb>
+                <tpCTe>0</tpCTe>
+                <procEmi>0</procEmi>
+                <verProc>DanfeSharp</verProc>
+                <cMunEnv>4106902</cMunEnv>
+                <xMunEnv>Curitiba</xMunEnv>
+                <UFEnv>PR</UFEnv>
+                <modal>01</modal>
+                <tpServ>0</tpServ>
+                <cMunIni>4106902</cMunIni>
+                <xMunIni>Curitiba</xMunIni>
+                <UFIni>PR</UFIni>
+                <cMunFim>3550308</cMunFim>
+                <xMunFim>Sao Paulo</xMunFim>
+                <UFFim>SP</UFFim>
+                <retira>1</retira>
+                <indIEToma>1</indIEToma>
+                <toma3><toma>0</toma></toma3>
+            </ide>
+            <compl>
+                <xCaracAd>Carga paletizada</xCaracAd>
+                <xObs>Documento ficticio para testes do DACTE. Entregar em horario comercial.</xObs>
+                <ObsCont xCampo="Pedido"><xTexto>PED-2026-0042</xTexto></ObsCont>
+            </compl>
+            <emit>
+                <CNPJ>98765432000110</CNPJ>
+                <IE>9012345678</IE>
+                <xNome>Transportadora Exemplo Ltda</xNome>
+                <xFant>Transporte Exemplo</xFant>
+                <enderEmit>
+                    <xLgr>Rodovia BR-116</xLgr>
+                    <nro>KM 100</nro>
+                    <xBairro>Distrito Industrial</xBairro>
+                    <cMun>4106902</cMun>
+                    <xMun>Curitiba</xMun>
+                    <CEP>81000000</CEP>
+                    <UF>PR</UF>
+                    <fone>4130001000</fone>
+                </enderEmit>
+                <CRT>3</CRT>
+            </emit>
+            <rem>
+                <CNPJ>12345678000195</CNPJ>
+                <IE>1234567890</IE>
+                <xNome>Empresa Exemplo Ltda</xNome>
+                <fone>4133334444</fone>
+                <enderReme>
+                    <xLgr>Rua Exemplo</xLgr>
+                    <nro>100</nro>
+                    <xBairro>Centro</xBairro>
+                    <cMun>4106902</cMun>
+                    <xMun>Curitiba</xMun>
+                    <CEP>80010000</CEP>
+                    <UF>PR</UF>
+                    <cPais>1058</cPais>
+                    <xPais>BRASIL</xPais>
+                </enderReme>
+            </rem>
+            <dest>
+                <CNPJ>11111111000191</CNPJ>
+                <IE>9876543210</IE>
+                <xNome>Cliente Exemplo S/A</xNome>
+                <enderDest>
+                    <xLgr>Av. Cliente</xLgr>
+                    <nro>200</nro>
+                    <xBairro>Centro</xBairro>
+                    <cMun>4106902</cMun>
+                    <xMun>Sao Paulo</xMun>
+                    <CEP>01010000</CEP>
+                    <UF>SP</UF>
+                    <cPais>1058</cPais>
+                    <xPais>BRASIL</xPais>
+                </enderDest>
+            </dest>
+            <vPrest>
+                <vTPrest>1500.00</vTPrest>
+                <vRec>1500.00</vRec>
+                <Comp><xNome>FRETE PESO</xNome><vComp>1200.00</vComp></Comp>
+                <Comp><xNome>FRETE VALOR</xNome><vComp>180.00</vComp></Comp>
+                <Comp><xNome>PEDAGIO</xNome><vComp>75.00</vComp></Comp>
+                <Comp><xNome>GRIS</xNome><vComp>30.00</vComp></Comp>
+                <Comp><xNome>TAXA DE COLETA</xNome><vComp>15.00</vComp></Comp>
+            </vPrest>
+            <imp>
+                <ICMS>
+                    <ICMS00>
+                        <CST>00</CST>
+                        <vBC>1500.00</vBC>
+                        <pICMS>12.00</pICMS>
+                        <vICMS>180.00</vICMS>
+                    </ICMS00>
+                </ICMS>
+                <vTotTrib>320.00</vTotTrib>
+                <IBSCBS>
+                    <CST>000</CST>
+                    <cClassTrib>000001</cClassTrib>
+                    <gIBSCBS>
+                        <vBC>1500.00</vBC>
+                        <gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>1.50</vIBSUF></gIBSUF>
+                        <gIBSMun><pIBSMun>0.0000</pIBSMun><vIBSMun>0.00</vIBSMun></gIBSMun>
+                        <vIBS>1.50</vIBS>
+                        <gCBS><pCBS>0.9000</pCBS><vCBS>13.50</vCBS></gCBS>
+                    </gIBSCBS>
+                </IBSCBS>
+            </imp>
+            <infCTeNorm>
+                <infCarga>
+                    <vCarga>48500.00</vCarga>
+                    <proPred>ELETRODOMESTICOS</proPred>
+                    <xOutCat>PALETIZADA</xOutCat>
+                    <infQ><cUnid>01</cUnid><tpMed>PESO BRUTO</tpMed><qCarga>1250.5000</qCarga></infQ>
+                    <infQ><cUnid>01</cUnid><tpMed>PESO CUBADO</tpMed><qCarga>1400.0000</qCarga></infQ>
+                    <infQ><cUnid>03</cUnid><tpMed>VOLUMES</tpMed><qCarga>32.0000</qCarga></infQ>
+                    <infQ><cUnid>00</cUnid><tpMed>VOLUME</tpMed><qCarga>6.4000</qCarga></infQ>
+                </infCarga>
+                <infDoc>
+                    <infNFe><chave>41261012345678000195550010000012341000012347</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000012351000012357</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000012361000012367</chave></infNFe>
+                </infDoc>
+                <infModal versaoModal="4.00">
+                    <rodo>
+                        <RNTRC>12345678</RNTRC>
+                    </rodo>
+                </infModal>
+            </infCTeNorm>
+        </infCte>
+        <infCTeSupl>
+            <qrCodCTe>https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe=41261098765432000110570010000045671000045675&amp;tpAmb=2</qrCodCTe>
+        </infCTeSupl>
+    </CTe>
+    <protCTe versao="4.00">
+        <infProt>
+            <tpAmb>2</tpAmb>
+            <verAplic>DanfeSharp</verAplic>
+            <chCTe>41261098765432000110570010000045671000045675</chCTe>
+            <dhRecbto>2026-10-22T08:30:05-03:00</dhRecbto>
+            <nProt>141260000077001</nProt>
+            <cStat>100</cStat>
+            <xMotivo>Autorizado o uso do CT-e</xMotivo>
+        </infProt>
+    </protCTe>
+</cteProc>

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CT-e fictício de homologação, modal aéreo, com 80 NF-e, expedidor, recebedor e tomador que não é participante. -->
+<cteProc versao="4.00" xmlns="http://www.portalfiscal.inf.br/cte">
+    <CTe xmlns="http://www.portalfiscal.inf.br/cte">
+        <infCte Id="CTe41261098765432000110570010000045681000045685" versao="4.00">
+            <ide>
+                <cUF>41</cUF>
+                <cCT>00004568</cCT>
+                <CFOP>6352</CFOP>
+                <natOp>PRESTACAO DE SERVICO DE TRANSPORTE A ESTABELECIMENTO INDUSTRIAL</natOp>
+                <mod>57</mod>
+                <serie>1</serie>
+                <nCT>4568</nCT>
+                <dhEmi>2026-10-22T08:30:00-03:00</dhEmi>
+                <tpImp>1</tpImp>
+                <tpEmis>1</tpEmis>
+                <cDV>5</cDV>
+                <tpAmb>2</tpAmb>
+                <tpCTe>0</tpCTe>
+                <procEmi>0</procEmi>
+                <verProc>DanfeSharp</verProc>
+                <cMunEnv>4106902</cMunEnv>
+                <xMunEnv>Curitiba</xMunEnv>
+                <UFEnv>PR</UFEnv>
+                <modal>02</modal>
+                <tpServ>0</tpServ>
+                <cMunIni>4106902</cMunIni>
+                <xMunIni>Curitiba</xMunIni>
+                <UFIni>PR</UFIni>
+                <cMunFim>3550308</cMunFim>
+                <xMunFim>Sao Paulo</xMunFim>
+                <UFFim>SP</UFFim>
+                <retira>1</retira>
+                <indIEToma>1</indIEToma>
+                <toma4>
+                    <toma>4</toma>
+                    <CNPJ>22222222000122</CNPJ>
+                    <IE>5555555555</IE>
+                    <xNome>Operador Logistico Exemplo S/A</xNome>
+                    <fone>1140004000</fone>
+                    <enderToma>
+                        <xLgr>Av. Logistica</xLgr>
+                        <nro>500</nro>
+                        <xBairro>Jardim Industrial</xBairro>
+                        <cMun>3550308</cMun>
+                        <xMun>Sao Paulo</xMun>
+                        <CEP>02020000</CEP>
+                        <UF>SP</UF>
+                    </enderToma>
+                </toma4>
+            </ide>
+            <compl>
+                <xCaracAd>Carga paletizada</xCaracAd>
+                <xObs>Documento ficticio para testes do DACTE. Entregar em horario comercial.</xObs>
+                <ObsCont xCampo="Pedido"><xTexto>PED-2026-0042</xTexto></ObsCont>
+            </compl>
+            <emit>
+                <CNPJ>98765432000110</CNPJ>
+                <IE>9012345678</IE>
+                <xNome>Transportadora Exemplo Ltda</xNome>
+                <xFant>Transporte Exemplo</xFant>
+                <enderEmit>
+                    <xLgr>Rodovia BR-116</xLgr>
+                    <nro>KM 100</nro>
+                    <xBairro>Distrito Industrial</xBairro>
+                    <cMun>4106902</cMun>
+                    <xMun>Curitiba</xMun>
+                    <CEP>81000000</CEP>
+                    <UF>PR</UF>
+                    <fone>4130001000</fone>
+                </enderEmit>
+                <CRT>3</CRT>
+            </emit>
+            <rem>
+                <CNPJ>12345678000195</CNPJ>
+                <IE>1234567890</IE>
+                <xNome>Empresa Exemplo Ltda</xNome>
+                <fone>4133334444</fone>
+                <enderReme>
+                    <xLgr>Rua Exemplo</xLgr>
+                    <nro>100</nro>
+                    <xBairro>Centro</xBairro>
+                    <cMun>4106902</cMun>
+                    <xMun>Curitiba</xMun>
+                    <CEP>80010000</CEP>
+                    <UF>PR</UF>
+                    <cPais>1058</cPais>
+                    <xPais>BRASIL</xPais>
+                </enderReme>
+            </rem>
+            <exped>
+                <CNPJ>33333333000133</CNPJ>
+                <IE>1111111111</IE>
+                <xNome>Armazem Expedidor Ltda</xNome>
+                <enderExped>
+                    <xLgr>Rua do Armazem</xLgr>
+                    <nro>10</nro>
+                    <xBairro>Industrial</xBairro>
+                    <cMun>4106902</cMun>
+                    <xMun>Curitiba</xMun>
+                    <CEP>81100000</CEP>
+                    <UF>PR</UF>
+                    <cPais>1058</cPais>
+                    <xPais>BRASIL</xPais>
+                </enderExped>
+            </exped>
+            <receb>
+                <CNPJ>44444444000144</CNPJ>
+                <IE>2222222222</IE>
+                <xNome>Centro de Distribuicao Recebedor Ltda</xNome>
+                <enderReceb>
+                    <xLgr>Rua do CD</xLgr>
+                    <nro>20</nro>
+                    <xBairro>Industrial</xBairro>
+                    <cMun>4106902</cMun>
+                    <xMun>Sao Paulo</xMun>
+                    <CEP>02100000</CEP>
+                    <UF>SP</UF>
+                    <cPais>1058</cPais>
+                    <xPais>BRASIL</xPais>
+                </enderReceb>
+            </receb>
+            <dest>
+                <CNPJ>11111111000191</CNPJ>
+                <IE>9876543210</IE>
+                <xNome>Cliente Exemplo S/A</xNome>
+                <enderDest>
+                    <xLgr>Av. Cliente</xLgr>
+                    <nro>200</nro>
+                    <xBairro>Centro</xBairro>
+                    <cMun>4106902</cMun>
+                    <xMun>Sao Paulo</xMun>
+                    <CEP>01010000</CEP>
+                    <UF>SP</UF>
+                    <cPais>1058</cPais>
+                    <xPais>BRASIL</xPais>
+                </enderDest>
+            </dest>
+            <vPrest>
+                <vTPrest>1500.00</vTPrest>
+                <vRec>1500.00</vRec>
+                <Comp><xNome>FRETE PESO</xNome><vComp>1200.00</vComp></Comp>
+                <Comp><xNome>FRETE VALOR</xNome><vComp>180.00</vComp></Comp>
+                <Comp><xNome>PEDAGIO</xNome><vComp>75.00</vComp></Comp>
+                <Comp><xNome>GRIS</xNome><vComp>30.00</vComp></Comp>
+                <Comp><xNome>TAXA DE COLETA</xNome><vComp>15.00</vComp></Comp>
+            </vPrest>
+            <imp>
+                <ICMS>
+                    <ICMS00>
+                        <CST>00</CST>
+                        <vBC>1500.00</vBC>
+                        <pICMS>12.00</pICMS>
+                        <vICMS>180.00</vICMS>
+                    </ICMS00>
+                </ICMS>
+                <vTotTrib>320.00</vTotTrib>
+            </imp>
+            <infCTeNorm>
+                <infCarga>
+                    <vCarga>48500.00</vCarga>
+                    <proPred>ELETRODOMESTICOS</proPred>
+                    <xOutCat>PALETIZADA</xOutCat>
+                    <infQ><cUnid>01</cUnid><tpMed>PESO BRUTO</tpMed><qCarga>1250.5000</qCarga></infQ>
+                    <infQ><cUnid>01</cUnid><tpMed>PESO CUBADO</tpMed><qCarga>1400.0000</qCarga></infQ>
+                    <infQ><cUnid>03</cUnid><tpMed>VOLUMES</tpMed><qCarga>32.0000</qCarga></infQ>
+                    <infQ><cUnid>00</cUnid><tpMed>VOLUME</tpMed><qCarga>6.4000</qCarga></infQ>
+                </infCarga>
+                <infDoc>
+                    <infNFe><chave>41261012345678000195550010000020001000020007</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020011000020017</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020021000020027</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020031000020037</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020041000020047</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020051000020057</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020061000020067</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020071000020077</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020081000020087</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020091000020097</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020101000020107</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020111000020117</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020121000020127</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020131000020137</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020141000020147</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020151000020157</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020161000020167</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020171000020177</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020181000020187</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020191000020197</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020201000020207</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020211000020217</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020221000020227</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020231000020237</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020241000020247</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020251000020257</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020261000020267</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020271000020277</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020281000020287</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020291000020297</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020301000020307</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020311000020317</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020321000020327</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020331000020337</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020341000020347</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020351000020357</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020361000020367</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020371000020377</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020381000020387</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020391000020397</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020401000020407</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020411000020417</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020421000020427</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020431000020437</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020441000020447</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020451000020457</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020461000020467</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020471000020477</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020481000020487</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020491000020497</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020501000020507</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020511000020517</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020521000020527</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020531000020537</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020541000020547</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020551000020557</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020561000020567</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020571000020577</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020581000020587</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020591000020597</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020601000020607</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020611000020617</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020621000020627</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020631000020637</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020641000020647</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020651000020657</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020661000020667</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020671000020677</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020681000020687</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020691000020697</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020701000020707</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020711000020717</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020721000020727</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020731000020737</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020741000020747</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020751000020757</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020761000020767</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020771000020777</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020781000020787</chave></infNFe>
+                    <infNFe><chave>41261012345678000195550010000020791000020797</chave></infNFe>
+                </infDoc>
+                <infModal versaoModal="4.00">
+                    <aereo>
+                        <nMinu>123456789</nMinu>
+                        <nOCA>98765432109</nOCA>
+                        <dPrevAereo>2026-10-23</dPrevAereo>
+                        <natCarga><xDime>120X080X100</xDime></natCarga>
+                        <tarifa><CL>G</CL><vTarifa>12.50</vTarifa></tarifa>
+                    </aereo>
+                </infModal>
+            </infCTeNorm>
+        </infCte>
+        <infCTeSupl>
+            <qrCodCTe>https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe=41261098765432000110570010000045681000045685&amp;tpAmb=2</qrCodCTe>
+        </infCTeSupl>
+    </CTe>
+    <protCTe versao="4.00">
+        <infProt>
+            <tpAmb>2</tpAmb>
+            <verAplic>DanfeSharp</verAplic>
+            <chCTe>41261098765432000110570010000045681000045685</chCTe>
+            <dhRecbto>2026-10-22T08:30:05-03:00</dhRecbto>
+            <nProt>141260000077001</nProt>
+            <cStat>100</cStat>
+            <xMotivo>Autorizado o uso do CT-e</xMotivo>
+        </infProt>
+    </protCTe>
+</cteProc>
