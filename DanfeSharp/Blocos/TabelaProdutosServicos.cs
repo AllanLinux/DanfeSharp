@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Text;
 using DanfeSharp.Graphics;
 using DanfeSharp.Modelo;
 
@@ -23,6 +25,12 @@ namespace DanfeSharp.Blocos
 
             Tabela = new Tabela(Estilo);
             String cabecalho4 = ViewModel.Emitente.CRT == "3" ? "O/CST" : "O/CSOSN";
+
+            if (ViewModel.UsarLeiauteReformaTributaria)
+            {
+                ConfigurarLeiauteReformaTributaria();
+                return;
+            }
 
             if (ViewModel.IsRetrato)
             { 
@@ -85,6 +93,81 @@ namespace DanfeSharp.Blocos
 
                 Tabela.AdicionarLinha(linha);
             }
+        }
+
+        /// <summary>
+        /// Leiaute do quadro "Dados dos Produtos/Serviços" da NT 2026.010 item 4.3, com as bases, alíquotas
+        /// e valores agrupados por tributo. Tributos ausentes no XML não são impressos (item 4.4).
+        /// </summary>
+        private void ConfigurarLeiauteReformaTributaria()
+        {
+            var ad = AlinhamentoHorizontal.Direita;
+            var ac = AlinhamentoHorizontal.Centro;
+            var ae = AlinhamentoHorizontal.Esquerda;
+            String rotuloCst = ViewModel.Emitente.CRT == "3" ? "CST" : "CSOSN";
+
+            Tabela
+            .ComColuna(6.5F, ac, "CÓDIGO", "PRODUTO")
+            .ComColuna(0, ae, "DESCRIÇÃO DO PRODUTO / SERVIÇO")
+            .ComColuna(6.5F, ae, "CST /", "CFOP")
+            .ComColuna(5.5F, ad, "QTD /", "UN")
+            .ComColuna(5.5F, ad, "VLR", "UNIT")
+            .ComColuna(6F, ad, "VLR", "TOTAL")
+            .ComColuna(10F, ad, "BASES DE", "CÁLCULO")
+            .ComColuna(17F, ad, "ALÍQUOTAS")
+            .ComColuna(17F, ad, "VALOR DOS", "TRIBUTOS");
+
+            Tabela.AjustarLarguraColunas();
+
+            foreach (var p in ViewModel.Produtos)
+            {
+                var classificacao = new StringBuilder();
+                if (!String.IsNullOrWhiteSpace(p.Ncm)) classificacao.Append("NCM ").Append(p.Ncm);
+                if (!String.IsNullOrWhiteSpace(p.ClassificacaoTributaria)) classificacao.Append(" cClassTrib ").Append(p.ClassificacaoTributaria);
+
+                var descricao = p.DescricaoCompleta;
+                if (classificacao.Length > 0) descricao += "\n" + classificacao.ToString().Trim();
+
+                var linha = new List<String>
+                {
+                    p.Codigo,
+                    descricao,
+                    $"{rotuloCst} {p.OCst}\nCFOP {p.Cfop}",
+                    $"{p.Quantidade.Formatar()}\n{p.Unidade}",
+                    p.ValorUnitario.Formatar(),
+                    p.ValorTotal.Formatar(),
+                    LinhasTributos(
+                        new[] { Tributo("ICMS", p.BaseIcms) },
+                        new[] { Tributo("IBS / CBS", p.BaseIbsCbs) },
+                        new[] { Tributo("IS", p.BaseIs) },
+                        new[] { Tributo("IPI", p.BaseIpi) }),
+                    LinhasTributos(
+                        new[] { Tributo("ICMS", p.AliquotaIcms, "%"), Tributo("CBS", p.AliquotaCbs, "%") },
+                        new[] { Tributo("IBS UF", p.AliquotaIbsUf, "%"), Tributo("IPI", p.AliquotaIpi, "%") },
+                        new[] { Tributo("IBS MUN", p.AliquotaIbsMunicipio, "%"), Tributo("IS", p.AliquotaIs, "%") }),
+                    LinhasTributos(
+                        new[] { Tributo("ICMS", p.ValorIcms), Tributo("CBS", p.ValorCbs) },
+                        new[] { Tributo("IBS UF", p.ValorIbsUf), Tributo("IPI", p.ValorIpi) },
+                        new[] { Tributo("IBS MUN", p.ValorIbsMunicipio), Tributo("IS", p.ValorIs) })
+                };
+
+                Tabela.AdicionarLinha(linha);
+            }
+        }
+
+        private static String Tributo(String nome, double? valor, String sufixo = null)
+        {
+            return valor.HasValue ? $"{nome} {valor.Formatar()}{sufixo}" : null;
+        }
+
+        /// <summary>
+        /// Monta uma linha por grupo de tributos, separados por " / ", omitindo os ausentes.
+        /// </summary>
+        private static String LinhasTributos(params String[][] grupos)
+        {
+            return String.Join("\n", grupos
+                .Select(g => String.Join(" / ", g.Where(t => t != null)))
+                .Where(l => l.Length > 0));
         }
 
         public override void Draw(Gfx gfx)

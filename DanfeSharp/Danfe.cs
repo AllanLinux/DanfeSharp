@@ -62,6 +62,10 @@ namespace DanfeSharp
                 AdicionarBloco<BlocoDuplicataFatura>();
 
             AdicionarBloco<BlocoCalculoImposto>(ViewModel.Orientacao == Orientacao.Paisagem ? EstiloPadrao : CriarEstilo(4.75F));
+
+            if (ViewModel.UsarLeiauteReformaTributaria)
+                AdicionarBloco<BlocoTotalIbsCbsIs>(ViewModel.Orientacao == Orientacao.Paisagem ? EstiloPadrao : CriarEstilo(4.75F));
+
             AdicionarBloco<BlocoTransportador>();
             AdicionarBloco<BlocoDadosAdicionais>(CriarEstilo(tFonteCampoConteudo: 8));
 

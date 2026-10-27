@@ -227,6 +227,17 @@ namespace DanfeSharp.Modelo
         /// </summary>
         public bool PreferirEmitenteNomeFantasia { get; set; } = true;
 
+        /// <summary>
+        /// Usa o leiaute da Reforma Tributária (NT 2026.010): CRT no quadro do emitente, quadro "Total do IBS/CBS/IS" e
+        /// tributos do IBS, CBS e IS na tabela de produtos. Quando nulo, o leiaute é usado se a nota possuir IBS, CBS ou IS.
+        /// </summary>
+        public bool? ExibirLeiauteReformaTributaria { get; set; } = null;
+
+        /// <summary>
+        /// Indica se o leiaute da Reforma Tributária (NT 2026.010) será usado.
+        /// </summary>
+        public bool UsarLeiauteReformaTributaria => ExibirLeiauteReformaTributaria ?? (CalculoImposto.PossuiIbsCbsIs || Produtos.Exists(p => p.PossuiIbsCbsIs));
+
 
         #endregion
 

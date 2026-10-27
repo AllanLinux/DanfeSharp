@@ -12,6 +12,27 @@ namespace DanfeSharp.Test
     {             
 
         [TestMethod]
+        public void RetratoReformaTributariaComMonofasia()
+        {
+            var model = FabricaFake.DanfeViewModel_1();
+            model.Orientacao = Orientacao.Retrato;
+            var m = model.CalculoImposto;
+            m.ValorCbs = FabricaFake.v;
+            m.ValorIbsUf = FabricaFake.v;
+            m.ValorIbsMunicipio = FabricaFake.v;
+            m.ValorImpostoSeletivo = FabricaFake.v;
+            m.ValorIbsMonofasico = FabricaFake.v;
+            m.ValorCbsMonofasica = FabricaFake.v;
+            m.ValorIbsMonofasicoRetencao = FabricaFake.v;
+            m.ValorCbsMonofasicaRetencao = FabricaFake.v;
+            Assert.IsTrue(model.UsarLeiauteReformaTributaria);
+
+            DanfeSharp.Danfe d = new DanfeSharp.Danfe(model);
+            d.Gerar();
+            d.SalvarTestPdf();
+        }
+
+        [TestMethod]
         public void RetratoSemIcmsInterestadual()
         {
             var model = FabricaFake.DanfeViewModel_1();

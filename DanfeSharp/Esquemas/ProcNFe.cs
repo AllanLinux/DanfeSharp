@@ -320,6 +320,16 @@ namespace DanfeSharp.Esquemas.NFe
         public string vTotTrib { get; set; }
         public ProdutoICMS ICMS { get; set; }
         public ProdutoIPI IPI { get; set; }
+
+        /// <summary>
+        /// Imposto Seletivo - UB01 (NT 2025.002-RTC)
+        /// </summary>
+        public ImpostoSeletivo IS { get; set; }
+
+        /// <summary>
+        /// IBS e CBS - UB12 (NT 2025.002-RTC)
+        /// </summary>
+        public ImpostoIBSCBS IBSCBS { get; set; }
     }
 
     /// <summary>
@@ -541,6 +551,21 @@ namespace DanfeSharp.Esquemas.NFe
     {
         public ICMSTotal ICMSTot { get; set; }
         public ISSQNTotal ISSQNtot { get; set; }
+
+        /// <summary>
+        /// Total do Imposto Seletivo - W31 (NT 2025.002-RTC)
+        /// </summary>
+        public ISTotal ISTot { get; set; }
+
+        /// <summary>
+        /// Total do IBS e da CBS - W34 (NT 2025.002-RTC)
+        /// </summary>
+        public IBSCBSTotal IBSCBSTot { get; set; }
+
+        /// <summary>
+        /// Valor total da NF-e com IBS, CBS e IS (NT 2025.002-RTC)
+        /// </summary>
+        public double? vNFTot { get; set; }
     }
 
 

@@ -31,8 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PDFClown, Version=0.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Developer\Git\PDFClown\dotNET\pdfclown.lib\build\package\PDFClown.dll</HintPath>
+      <HintPath>..\packages\PDFClown.0.1.2\lib\net40\PDFClown.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,6 +57,7 @@
     <Compile Include="Blocos\BlocoLocalEntregaRetirada\BlocoLocalEntregaRetirada.cs" />
     <Compile Include="Blocos\BlocoLocalEntregaRetirada\BlocoLocalRetirada.cs" />
     <Compile Include="Blocos\TabelaProdutosServicos.cs" />
+    <Compile Include="Blocos\BlocoTotalIbsCbsIs.cs" />
     <Compile Include="Blocos\BlocoTransportador.cs" />
     <Compile Include="Constantes.cs" />
     <Compile Include="Danfe.cs" />
@@ -105,11 +105,14 @@
     <Compile Include="Graphics\Gfx.cs" />
     <Compile Include="Esquemas\Namespaces.cs" />
     <Compile Include="Esquemas\ProcNFe.cs" />
+    <Compile Include="Esquemas\ReformaTributaria.cs" />
     <Compile Include="Esquemas\Versao.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="Structs\DateTimeOffsetIso8601.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

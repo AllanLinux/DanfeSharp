@@ -184,6 +184,34 @@ namespace DanfeSharp.Modelo
             };
         }
 
+        /// <summary>
+        /// Extrai os totais do IBS, CBS e IS (NT 2025.002-RTC).
+        /// </summary>
+        internal static void ExtrairTotaisReformaTributaria(CalculoImpostoViewModel m, Total total)
+        {
+            m.ValorImpostoSeletivo = total.ISTot?.vIS;
+            m.ValorTotalNotaComIbsCbsIs = total.vNFTot;
+
+            var t = total.IBSCBSTot;
+            if (t == null) return;
+
+            m.BaseCalculoIbsCbs = t.vBCIBSCBS;
+            m.ValorIbs = t.gIBS?.vIBS;
+            m.ValorIbsUf = t.gIBS?.gIBSUF?.vIBSUF;
+            m.ValorIbsMunicipio = t.gIBS?.gIBSMun?.vIBSMun;
+            m.ValorCbs = t.gCBS?.vCBS;
+
+            var mono = t.gMono;
+
+            if (mono != null)
+            {
+                m.ValorIbsMonofasico = mono.vIBSMono;
+                m.ValorCbsMonofasica = mono.vCBSMono;
+                m.ValorIbsMonofasicoRetencao = mono.vIBSMonoReten;
+                m.ValorCbsMonofasicaRetencao = mono.vCBSMonoReten;
+            }
+        }
+
         public static DanfeViewModel CreateFromXml(ProcNFe procNfe)
         {
             DanfeViewModel model = new DanfeViewModel();
@@ -278,7 +306,35 @@ namespace DanfeSharp.Modelo
                         {
                             produto.ValorIpi = ipi.vIPI;
                             produto.AliquotaIpi = ipi.pIPI;
+                            produto.BaseIpi = ipi.vBC;
                         }
+                    }
+
+                    if (imposto.IBSCBS != null)
+                    {
+                        var ibsCbs = imposto.IBSCBS;
+                        produto.CstIbsCbs = ibsCbs.CST;
+                        produto.ClassificacaoTributaria = ibsCbs.cClassTrib;
+
+                        var g = ibsCbs.gIBSCBS;
+
+                        if (g != null)
+                        {
+                            produto.BaseIbsCbs = g.vBC;
+                            produto.AliquotaIbsUf = g.gIBSUF?.AliquotaDanfe;
+                            produto.ValorIbsUf = g.gIBSUF?.vIBSUF;
+                            produto.AliquotaIbsMunicipio = g.gIBSMun?.AliquotaDanfe;
+                            produto.ValorIbsMunicipio = g.gIBSMun?.vIBSMun;
+                            produto.AliquotaCbs = g.gCBS?.AliquotaDanfe;
+                            produto.ValorCbs = g.gCBS?.vCBS;
+                        }
+                    }
+
+                    if (imposto.IS != null)
+                    {
+                        produto.BaseIs = imposto.IS.vBCIS;
+                        produto.AliquotaIs = imposto.IS.pIS;
+                        produto.ValorIs = imposto.IS.vIS;
                     }
                 }
 
@@ -299,6 +355,7 @@ namespace DanfeSharp.Modelo
             }
 
             model.CalculoImposto = CriarCalculoImpostoViewModel(infNfe.total.ICMSTot);
+            ExtrairTotaisReformaTributaria(model.CalculoImposto, infNfe.total);
 
             var issqnTotal = infNfe.total.ISSQNtot;
 
