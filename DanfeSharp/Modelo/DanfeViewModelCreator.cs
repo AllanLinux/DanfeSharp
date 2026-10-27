@@ -13,7 +13,7 @@ namespace DanfeSharp.Modelo
     {
         public readonly static IEnumerable<FormaEmissao> FormasEmissaoSuportadas = new FormaEmissao[]{ FormaEmissao.Normal, FormaEmissao.ContingenciaSVCAN, FormaEmissao.ContingenciaSVCRS };
 
-        private static EmpresaViewModel CreateEmpresaFrom(Empresa empresa)
+        internal static EmpresaViewModel CreateEmpresaFrom(Empresa empresa)
         {
             EmpresaViewModel model = new EmpresaViewModel();
 
@@ -218,6 +218,82 @@ namespace DanfeSharp.Modelo
             }
         }
 
+        /// <summary>
+        /// Cria o modelo de um item da NF-e ou da NFC-e.
+        /// </summary>
+        internal static ProdutoViewModel CriarProduto(Detalhe det)
+        {
+            ProdutoViewModel produto = new ProdutoViewModel();
+            produto.Codigo = det.prod.cProd;
+            produto.Descricao = det.prod.xProd;
+            produto.Ncm = det.prod.NCM;
+            produto.Cfop = det.prod.CFOP;
+            produto.Unidade = det.prod.uCom;
+            produto.Quantidade = det.prod.qCom;
+            produto.ValorUnitario = det.prod.vUnCom;
+            produto.ValorTotal = det.prod.vProd;
+            produto.InformacoesAdicionais = det.infAdProd;
+
+            var imposto = det.imposto;
+
+            if (imposto != null)
+            {
+                if (imposto.ICMS != null)
+                {
+                    var icms = imposto.ICMS.ICMS;
+
+                    if (icms != null)
+                    {
+                        produto.ValorIcms = icms.vICMS;
+                        produto.BaseIcms = icms.vBC;
+                        produto.AliquotaIcms = icms.pICMS;
+                        produto.OCst = icms.orig + icms.CST + icms.CSOSN;
+                    }
+                }
+
+                if (imposto.IPI != null)
+                {
+                    var ipi = imposto.IPI.IPITrib;
+
+                    if (ipi != null)
+                    {
+                        produto.ValorIpi = ipi.vIPI;
+                        produto.AliquotaIpi = ipi.pIPI;
+                        produto.BaseIpi = ipi.vBC;
+                    }
+                }
+
+                if (imposto.IBSCBS != null)
+                {
+                    var ibsCbs = imposto.IBSCBS;
+                    produto.CstIbsCbs = ibsCbs.CST;
+                    produto.ClassificacaoTributaria = ibsCbs.cClassTrib;
+
+                    var g = ibsCbs.gIBSCBS;
+
+                    if (g != null)
+                    {
+                        produto.BaseIbsCbs = g.vBC;
+                        produto.AliquotaIbsUf = g.gIBSUF?.AliquotaDanfe;
+                        produto.ValorIbsUf = g.gIBSUF?.vIBSUF;
+                        produto.AliquotaIbsMunicipio = g.gIBSMun?.AliquotaDanfe;
+                        produto.ValorIbsMunicipio = g.gIBSMun?.vIBSMun;
+                        produto.AliquotaCbs = g.gCBS?.AliquotaDanfe;
+                        produto.ValorCbs = g.gCBS?.vCBS;
+                    }
+                }
+
+                if (imposto.IS != null)
+                {
+                    produto.BaseIs = imposto.IS.vBCIS;
+                    produto.AliquotaIs = imposto.IS.pIS;
+                    produto.ValorIs = imposto.IS.vIS;
+                }
+            }
+
+            return produto;
+        }
+
         public static DanfeViewModel CreateFromXml(ProcNFe procNfe)
         {
             DanfeViewModel model = new DanfeViewModel();
@@ -229,7 +305,7 @@ namespace DanfeSharp.Modelo
 
             if (ide.mod != 55)
             {
-                throw new NotSupportedException("Somente o mod==55 está implementado.");
+                throw new NotSupportedException("O DANFE é gerado apenas para a NF-e (mod 55). Para a NFC-e (mod 65), use DanfeSharp.NFCe.Danfce.");
             }
 
             if(!FormasEmissaoSuportadas.Contains(model.TipoEmissao))
@@ -276,75 +352,7 @@ namespace DanfeSharp.Modelo
 
             foreach (var det in infNfe.det)
             {
-                ProdutoViewModel produto = new ProdutoViewModel();
-                produto.Codigo = det.prod.cProd;
-                produto.Descricao = det.prod.xProd;
-                produto.Ncm = det.prod.NCM;
-                produto.Cfop = det.prod.CFOP;
-                produto.Unidade = det.prod.uCom;
-                produto.Quantidade = det.prod.qCom;
-                produto.ValorUnitario = det.prod.vUnCom;
-                produto.ValorTotal = det.prod.vProd;
-                produto.InformacoesAdicionais = det.infAdProd;
-
-                var imposto = det.imposto;
-
-                if (imposto != null)
-                {
-                    if (imposto.ICMS != null)
-                    {
-                        var icms = imposto.ICMS.ICMS;
-
-                        if (icms != null)
-                        {
-                            produto.ValorIcms = icms.vICMS;
-                            produto.BaseIcms = icms.vBC;
-                            produto.AliquotaIcms = icms.pICMS;
-                            produto.OCst = icms.orig + icms.CST + icms.CSOSN;
-                        }
-                    }
-
-                    if (imposto.IPI != null)
-                    {
-                        var ipi = imposto.IPI.IPITrib;
-
-                        if (ipi != null)
-                        {
-                            produto.ValorIpi = ipi.vIPI;
-                            produto.AliquotaIpi = ipi.pIPI;
-                            produto.BaseIpi = ipi.vBC;
-                        }
-                    }
-
-                    if (imposto.IBSCBS != null)
-                    {
-                        var ibsCbs = imposto.IBSCBS;
-                        produto.CstIbsCbs = ibsCbs.CST;
-                        produto.ClassificacaoTributaria = ibsCbs.cClassTrib;
-
-                        var g = ibsCbs.gIBSCBS;
-
-                        if (g != null)
-                        {
-                            produto.BaseIbsCbs = g.vBC;
-                            produto.AliquotaIbsUf = g.gIBSUF?.AliquotaDanfe;
-                            produto.ValorIbsUf = g.gIBSUF?.vIBSUF;
-                            produto.AliquotaIbsMunicipio = g.gIBSMun?.AliquotaDanfe;
-                            produto.ValorIbsMunicipio = g.gIBSMun?.vIBSMun;
-                            produto.AliquotaCbs = g.gCBS?.AliquotaDanfe;
-                            produto.ValorCbs = g.gCBS?.vCBS;
-                        }
-                    }
-
-                    if (imposto.IS != null)
-                    {
-                        produto.BaseIs = imposto.IS.vBCIS;
-                        produto.AliquotaIs = imposto.IS.pIS;
-                        produto.ValorIs = imposto.IS.vIS;
-                    }
-                }
-
-                model.Produtos.Add(produto);
+                model.Produtos.Add(CriarProduto(det));
             }
 
             if (infNfe.cobr != null)

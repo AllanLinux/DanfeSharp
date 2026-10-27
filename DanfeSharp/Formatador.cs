@@ -219,6 +219,14 @@ namespace DanfeSharp
             return dateTime.HasValue ? dateTime.Value.ToString("dd/MM/yyyy hh:mm:ss") : String.Empty;
         }
 
+        /// <summary>
+        /// Formata a data e a hora no relógio de 24 horas, ex.: 20/10/2026 14:05:00
+        /// </summary>
+        public static String FormatarDataHora24(this DateTime? dateTime)
+        {
+            return dateTime.HasValue ? dateTime.Value.ToString("dd/MM/yyyy HH:mm:ss") : String.Empty;
+        }
+
         public static String Formatar(this TimeSpan? timeSpan)
         {
             return timeSpan.HasValue ? timeSpan.Value.ToString() : String.Empty;
