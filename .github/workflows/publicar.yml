@@ -1,5 +1,6 @@
-# Publica o pacote DanfeSharp.Next ao enviar uma tag de versão (ex.: git tag v3.1.1 && git push origin v3.1.1).
-# O pacote vai para o GitHub Packages e fica anexado a uma Release do repositório.
+# Publica o pacote DanfeSharp.Next ao enviar uma tag de versão (ex.: git tag v3.2.1 && git push origin v3.2.1).
+# O pacote vai para o nuget.org e para o GitHub Packages e fica anexado a uma Release do repositório.
+# O nuget.org usa Trusted Publishing: a política do usuário allanlinux autoriza este workflow, sem API key guardada.
 name: Publicar pacote
 
 on:
@@ -10,6 +11,7 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write
 
 jobs:
   publicar:
@@ -49,3 +51,13 @@ jobs:
             --name github --username "${{ github.repository_owner }}" \
             --password "${{ secrets.GITHUB_TOKEN }}" --store-password-in-clear-text
           dotnet nuget push nupkgs/*.nupkg --source github --api-key "${{ secrets.GITHUB_TOKEN }}" --skip-duplicate
+
+      - name: Login no nuget.org (Trusted Publishing)
+        uses: NuGet/login@v1
+        id: nuget
+        with:
+          user: allanlinux
+
+      - name: Publicar no nuget.org
+        shell: bash
+        run: dotnet nuget push nupkgs/*.nupkg --source https://api.nuget.org/v3/index.json --api-key "${{ steps.nuget.outputs.NUGET_API_KEY }}" --skip-duplicate
