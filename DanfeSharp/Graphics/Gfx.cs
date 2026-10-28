@@ -73,39 +73,12 @@ namespace DanfeSharp.Graphics
             if (xobj == null) throw new ArgumentNullException(nameof(xobj));
             CheckRectangle(r);
 
-            PointF p = new PointF();
-            SizeF s = new SizeF();
             SizeF xs = new SizeF((float)xobj.PointWidth, (float)xobj.PointHeight).ToMm();
 
-            if(r.Height >= r.Width)
-            {
-                if(xs.Height >= xs.Width)
-                {
-                    s.Height = r.Height;
-                    s.Width = (s.Height * xs.Width) / xs.Height;
-                }
-                else
-                {
-                    s.Width = r.Width;
-                    s.Height = (s.Width * xs.Height) / xs.Width;
-                }
-            }
-            else
-            {
-                if (xs.Height >= xs.Width)
-                {
-                    s.Width = r.Width;
-                    s.Height = (s.Width * xs.Height) / xs.Width;
-                }
-                else
-                {
-                    s.Height = r.Height;
-                    s.Width = (s.Height * xs.Width) / xs.Height;
-                }
-            }
-
-            p.X = r.X + Math.Abs(r.Width - s.Width) / 2F;
-            p.Y = r.Y + Math.Abs(r.Height - s.Height) / 2F;
+            // Encaixa a imagem inteira no retângulo, mantendo a proporção, e centraliza.
+            float escala = Math.Min(r.Width / xs.Width, r.Height / xs.Height);
+            SizeF s = new SizeF(xs.Width * escala, xs.Height * escala);
+            PointF p = new PointF(r.X + (r.Width - s.Width) / 2F, r.Y + (r.Height - s.Height) / 2F);
 
             var destino = new RectangleF(p, s).ToPointMeasure();
             XGraphics.DrawImage(xobj, destino.X, destino.Y, destino.Width, destino.Height);
