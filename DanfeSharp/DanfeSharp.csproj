@@ -8,7 +8,7 @@
     <NeutralLanguage>pt-BR</NeutralLanguage>
 
     <PackageId>DanfeSharp.Next</PackageId>
-    <Version>3.2.2</Version>
+    <Version>3.2.3</Version>
     <Product>DanfeSharp</Product>
     <Description>Gerador em PDF do DANFE (NF-e), DANFE NFC-e, documentos de eventos (carta de correção, cancelamento), DACTE (CT-e) e DANFSe (NFS-e Nacional), com suporte ao IBS, CBS e IS da Reforma Tributária (NT 2025.002 e NT 2026.010).</Description>
     <Copyright>Copyright © 2017 Ricardo Brito, © 2026 Allan Ferreira</Copyright>
@@ -46,6 +46,8 @@
   <!-- .NET 8+: PDFsharp 6, multiplataforma. -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="PDFsharp" Version="6.2.4" />
+    <!-- O PDFsharp 6 depende da 8.0.1, afetada pelos CVE-2026-70162 e CVE-2026-84008; a 8.0.2 tem a correção. -->
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
   </ItemGroup>
 
   <!-- QR Code da NFC-e e do CT-e: só a matriz de módulos é usada, o desenho é vetorial. -->
