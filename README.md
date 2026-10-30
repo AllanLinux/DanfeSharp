@@ -1,8 +1,11 @@
 # DanfeSharp.Next
 
 Biblioteca em C# que gera em PDF os documentos auxiliares dos documentos fiscais eletrônicos brasileiros a partir
-do XML autorizado: DANFE da NF-e, DANFE NFC-e, documentos de eventos (carta de correção, cancelamento e outros) e
-DACTE do CT-e. Já traz o leiaute da Reforma Tributária, com IBS, CBS e Imposto Seletivo (NT 2025.002 e NT 2026.010).
+do XML autorizado: DANFE da NF-e, DANFE NFC-e, documentos de eventos (carta de correção, cancelamento e outros),
+DACTE do CT-e e DANFSe da NFS-e Nacional. Já traz o leiaute da Reforma Tributária, com IBS, CBS e Imposto Seletivo
+(NT 2025.002 e NT 2026.010).
+
+A biblioteca só gera o PDF: ela não emite, assina nem transmite documentos. Use-a junto com o sistema que emite as notas.
 
 Este projeto é um fork do [DanfeSharp](https://github.com/SilverCard/DanfeSharp), criado por Ricardo Brito, e é
 distribuído como o pacote `DanfeSharp.Next`. Os PDFs são escritos com a biblioteca [PDFsharp](https://www.pdfsharp.net/).
@@ -19,15 +22,24 @@ distribuído como o pacote `DanfeSharp.Next`. Os PDFs são escritos com a biblio
 
 ## Instalação
 
+O pacote está no [nuget.org](https://www.nuget.org/packages/DanfeSharp.Next):
+
 ```
 dotnet add package DanfeSharp.Next
 ```
 
 Ou, no Visual Studio, procure por `DanfeSharp.Next` no Gerenciador de Pacotes NuGet.
 
-### Pelo GitHub
+Para atualizar um projeto que já usa o pacote, rode o mesmo comando (ele instala a versão mais recente) ou use a aba
+**Atualizações** do Gerenciador de Pacotes NuGet. As mudanças de cada versão estão nas
+[Releases](https://github.com/AllanLinux/DanfeSharp.Next/releases).
 
-Cada versão é publicada no GitHub Packages e anexada às
+> Atenção: o pacote `DanfeSharp`, sem o `.Next`, é o projeto original de 2017. Ele não tem a Reforma Tributária, a
+> DANFSe nem os demais documentos.
+
+### Alternativas pelo GitHub
+
+Cada versão também é publicada no GitHub Packages e anexada às
 [Releases](https://github.com/AllanLinux/DanfeSharp.Next/releases) do repositório.
 
 **GitHub Packages:** o GitHub exige autenticação até para pacotes públicos. Crie um token clássico em
@@ -66,13 +78,70 @@ DanfeSharp.Fontes.Registrar("serif-regular.ttf", "serif-negrito.ttf", "serif-ita
 
 Todos os documentos seguem o mesmo padrão:
 
-1. criar o modelo a partir do XML, com a classe `...ViewModelCreator` do documento;
+1. criar o modelo a partir do XML, com o leitor (`...ViewModelCreator`) do documento;
 2. ajustar as opções do modelo, se quiser;
 3. criar o documento, adicionar o logotipo (opcional), chamar `Gerar()` e `Salvar(...)`.
 
 O modelo pode ser criado de um arquivo (`CriarDeArquivoXml(caminho)`), de um `Stream` (`CriarDeArquivoXml(stream)`)
 ou de uma string (`CriarDeStringXml(xml)`). Para os eventos, só há as versões com caminho e com string. O documento
 implementa `IDisposable`, então use-o dentro de um `using`.
+
+### Qual classe usar para cada XML
+
+Cada documento tem o seu leitor e o seu gerador. Os nomes do DANFE e da DANFSe diferem só por um "s"; usar o leitor
+de um com o gerador do outro causa o erro de compilação "cannot convert from `DanfeViewModel` to `DanfseViewModel`".
+
+| XML (elemento raiz) | Leitor | Gerador | Namespace |
+|---|---|---|---|
+| NF-e autorizada (`nfeProc`, modelo 55) | `DanfeViewModelCreator` | `Danfe` | `DanfeSharp.Modelo` e `DanfeSharp` |
+| NFC-e (`nfeProc` ou `NFe`, modelo 65) | `DanfceViewModelCreator` | `Danfce` | `DanfeSharp.NFCe` |
+| Evento processado (`procEventoNFe`) | `EventoViewModelCreator` | `DocumentoEvento` | `DanfeSharp.Eventos` |
+| CT-e autorizado (`cteProc`) | `DacteViewModelCreator` | `Dacte` | `DanfeSharp.CTe` |
+| NFS-e Nacional (`NFSe`) | `DanfseViewModelCreator` | `Danfse` | `DanfeSharp.NFSe` |
+
+### Identificar o tipo de XML automaticamente
+
+Quando o sistema recebe XMLs de vários tipos, o namespace e o elemento raiz indicam qual documento gerar:
+
+```csharp
+using System.Xml;
+using DanfeSharp;
+using DanfeSharp.CTe;
+using DanfeSharp.Modelo;
+using DanfeSharp.NFCe;
+using DanfeSharp.NFSe;
+
+static void GerarPdf(string xmlPath, string pdfPath)
+{
+    var xml = new XmlDocument();
+    xml.Load(xmlPath);
+
+    var raiz = xml.DocumentElement;
+    string ns = raiz?.NamespaceURI ?? "";
+    string modelo = xml.GetElementsByTagName("mod", "http://www.portalfiscal.inf.br/nfe").Item(0)?.InnerText;
+
+    DocumentoAuxiliar documento;
+
+    if (ns == "http://www.sped.fazenda.gov.br/nfse")
+        documento = new Danfse(DanfseViewModelCreator.CriarDeArquivoXml(xmlPath));
+    else if (ns == "http://www.portalfiscal.inf.br/cte")
+        documento = new Dacte(DacteViewModelCreator.CriarDeArquivoXml(xmlPath));
+    else if (ns == "http://www.portalfiscal.inf.br/nfe" && modelo == "65")
+        documento = new Danfce(DanfceViewModelCreator.CriarDeArquivoXml(xmlPath));
+    else if (ns == "http://www.portalfiscal.inf.br/nfe" && raiz.LocalName != "procEventoNFe")
+        documento = new Danfe(DanfeViewModelCreator.CriarDeArquivoXml(xmlPath));
+    else
+        throw new NotSupportedException($"XML não suportado: {raiz?.LocalName} ({ns})");
+
+    using (documento)
+    {
+        documento.Gerar();
+        documento.Salvar(pdfPath);
+    }
+}
+```
+
+Para eventos (`procEventoNFe`), use o `EventoViewModelCreator`, que pode receber também o XML da NF-e.
 
 ### DANFE da NF-e
 
@@ -213,6 +282,8 @@ app.MapPost("/danfe", (HttpRequest request) =>
 
 - XML malformado ou de outro tipo de documento: `XmlException` ou `Exception` com a linha e a posição do erro.
 - NFC-e passada ao `DanfeViewModelCreator`: `NotSupportedException`, indicando o uso do `Danfce`.
+- XML que não é da NFS-e Nacional passado ao `DanfseViewModelCreator` (por exemplo, só a DPS ou um XML de padrão
+  municipal): `XmlException`.
 - Forma de emissão não suportada pelo DANFE: `NotSupportedException`.
 
 ## Compilar a partir do código
@@ -225,6 +296,17 @@ dotnet pack DanfeSharp/DanfeSharp.csproj -c Release -o nupkgs
 
 Os testes geram os PDFs de exemplo na pasta `Output` dentro de `DanfeSharp.Test/bin`, a partir dos XMLs fictícios em
 `DanfeSharp.Test/Xml`.
+
+### Publicar uma nova versão
+
+A publicação é feita pelo workflow `.github/workflows/publicar.yml` a cada tag `v*`:
+
+1. aumente a `<Version>` em `DanfeSharp/DanfeSharp.csproj` e faça o merge na `dev`;
+2. crie e envie a tag com o mesmo número, por exemplo `git tag -a v3.2.4 -m "DanfeSharp.Next 3.2.4"` e
+   `git push origin v3.2.4`.
+
+O workflow compila, roda os testes e publica no nuget.org (Trusted Publishing, sem API key guardada), no GitHub
+Packages e em uma Release. Um número de versão publicado no nuget.org não pode ser reutilizado.
 
 ## Limitações
 
